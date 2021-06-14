@@ -1,0 +1,7 @@
+namespace Namespace {
+    
+    using Client = client.Client;
+    
+    public static class Module {
+    }
+}

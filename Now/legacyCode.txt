@@ -1,0 +1,264 @@
+﻿ /// <summary>
+        /// Certificate validation callback.
+        /// </summary>
+        private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error) {
+            // If the certificate is a valid, signed certificate, return true.
+            if (error == System.Net.Security.SslPolicyErrors.None) {
+                return true;
+            }
+
+            Console.WriteLine("X509Certificate [{0}] Policy Error: '{1}'",
+                cert.Subject,
+                error.ToString());
+
+            return false;
+        }
+
+        public static void Login()
+        {
+            ////var request = (HttpWebRequest)WebRequest.Create("https://app.sharesies.com/api/identity/login HTTP/1.1");
+            ////https://app.sharesies.com/api/identity/login
+            //var request = (HttpWebRequest)WebRequest.Create("https://app.sharesies.com/api/identity/login");
+            //request.Host = "app.sharesies.com";
+
+            ////request.ContentLength = 76;
+            //request.Headers["sec-ch-ua"] = " \"Not; A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\";";
+            //request.Headers["x-version"] = "9593";
+            //request.Headers["DNT"] = "1";
+            //request.Headers["x-api-version"] = "33";
+            //request.Headers["sec-ch-ua-mobile"] = "?0";
+            //request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36";          
+            //request.Headers["x-known-device-key"] = "fded2945-3566-4c96-9e66-1264373ea09b";
+            //request.Headers["x-git-hash"] = "7ab4eb9847185e7b5518da901ed792b01de314ff";
+            //request.Accept = "*/*";
+            //request.Headers["Origin"] = "https://app.sharesies.com";
+            //request.Headers["Sec-Fetch-Site"] = "same-origin";
+            //request.Headers["Sec-Fetch-Mode"] = "cors";
+            //request.Headers["Sec-Fetch-Dest"] = "empty";
+            //request.Headers["Referer"] = "https://app.sharesies.com/login?_ga=2.153184378.310525915.1621999829-1590703744.1621999829";
+            //request.Headers["Accept-Encoding"] = "gzip, deflate, br";
+            //request.Headers["Accept-Language"] = "en-GB,en-US;q=0.9,en;q=0.8";
+
+            //var postData = "{\"email\":\"dawoodali@gmail.com\",\"password\":\"Newzealand123!\",\"remember\":false}";            
+            //var data = Encoding.ASCII.GetBytes(postData);
+
+            //request.Method = "POST";
+            //request.ContentType = "application/x-www-form-urlencoded";
+            //request.ContentType = "application/json";
+            //request.ContentLength = data.Length;
+
+            //using (var stream = request.GetRequestStream()) {
+            //    stream.Write(data, 0, data.Length);
+            //}
+
+            //var response = (HttpWebResponse)request.GetResponse();
+            //var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+            var t = ReadFully(response.GetResponseStream());
+            var y = Decompress(t);
+            var responseString = Encoding.UTF8.GetString(y, 0, y.Length);
+
+            LoginResponse lr = JsonConvert.DeserializeObject<LoginResponse>(responseString);
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
+            //wc.Headers.Add("Accept-Encoding", "gzip, deflate");
+            httpClient.DefaultRequestHeaders.Add("Accept-Charset" , "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+           // httpClient.DefaultRequestHeaders.Add("content-type", "application/json");
+            //wc.Headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+            //wc.Headers.Add("Accept-Language", ": en-GB,en;q=0.9");
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36");
+            //httpClient.DefaultRequestHeaders.Add("Cookie",
+            //             "__cfduid=dd8ad0e9c7148638258335224cc1d64061618524178;" +
+            //             "_ga=GA1.3.2146275428.1618524179;" +
+            //             "_gid=GA1.3.402229557.1618524179;" +
+            //             "__stripe_mid=e81606c3-6256-4b71-81e3-d7b3158b78150a7cc8;" +
+            //             "__stripe_sid=598fc352-c6d1-4038-891f-d4439418f4ad02e585;" +
+            //             "_gat_all=1" +
+            //             "_gid=GA1.3.402229557.1618524179");
+
+   
+            
+           // string parametersJson = "{'email:dawoodali@gmail.com','password:Newzealand123!', 'remember:true'}";
+           // var response = httpClient.PostAsync(url, new StringContent(parametersJson)).Result;
+
+            // response.EnsureSuccessStatusCode();
+
+           // string content = response.Content.ReadAsStringAsync().Result;
+
+            //var rrreturn = Task.Run(() => JsonObject.Parse(content));
+
+            Uri address = new Uri("https://app.sharesies.com/api/identity/login");
+
+            ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+             
+            using (WebClient wc = new WebClient()) {
+             
+                wc.Headers.Add("Accept", "*/*");
+                //wc.Headers.Add("Accept-Encoding", "gzip, deflate");
+                wc.Headers["Accept-Charset"] = "ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+                wc.Headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+                wc.Headers["content-type"] = "application/json";
+
+                wc.Headers.Add("Accept-Language", ": en-GB,en;q=0.9");
+                wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36");
+                //wc.Headers.Add(HttpRequestHeader.Cookie,
+                //             "__cfduid=dd8ad0e9c7148638258335224cc1d64061618524178;" +
+                //             "_ga=GA1.3.2146275428.1618524179;" +
+                //             "_gid=GA1.3.402229557.1618524179;" +
+                //             "__stripe_mid=e81606c3-6256-4b71-81e3-d7b3158b78150a7cc8;" +
+                //             "__stripe_sid=598fc352-c6d1-4038-891f-d4439418f4ad02e585;" +
+                //             "_gat_all=1" +
+                //             "_gid=GA1.3.402229557.1618524179");
+                //wc.Headers["Content-Type"] = "application/json";
+
+               // wc.UploadString("https://app.sharesies.com/api/identity/login", "{\"email\":\"dawoodali@gmail.com\",\"password\":\"Newzealand123!\",\"remember\":true}").;
+                var stream = wc.OpenRead(address);
+                using (StreamReader sr = new StreamReader(stream)) {
+                    var page = sr.ReadToEnd();
+                }
+            }
+
+
+
+            //WebClient wc = new WebClient();
+            //wc.Headers.Add("Accept", "*/*");
+            ////wc.Headers.Add("Accept-Encoding", "gzip, deflate");
+            //wc.Headers["Accept-Charset"] = "ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+            //wc.Headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+            //wc.Headers.Add("Accept-Language", ": en-GB,en;q=0.9");
+            //wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36");
+            //wc.Headers.Add(HttpRequestHeader.Cookie,
+            //             "__cfduid=dd8ad0e9c7148638258335224cc1d64061618524178;" +
+            //             "_ga=GA1.3.2146275428.1618524179;" +
+            //             "_gid=GA1.3.402229557.1618524179;" +
+            //             "__stripe_mid=e81606c3-6256-4b71-81e3-d7b3158b78150a7cc8;" +
+            //             "__stripe_sid=598fc352-c6d1-4038-891f-d4439418f4ad02e585;" +
+            //             "_gat_all=1" +
+            //             "_gid=GA1.3.402229557.1618524179");
+            //wc.Headers["Content-Type"] = "application/json";
+
+
+            //string response = wc.UploadString("https://app.sharesies.com/api/identity/login","{\"email\":\"dawoodali@gmail.com\",\"password\":\"Newzealand123!\",\"remember\":true}");
+        }
+
+        public static void old()
+		{
+            //string result = "";
+
+
+            ////Transactionservlet?hostlogkey=0283310560390010151
+
+            //HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("https://www.posnet.ykb.com/PosnetF1/Detailservlet?hostlogkey=" + hostLogKey);
+
+            ////HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create("https://www.posnet.ykb.com/PosnetF1/CsvServleti?trantype=cctran&reporttype=text");
+
+
+            //req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36)";
+            ////User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36
+
+            //req.Method = "POST";
+
+            //req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+            ////Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+
+            //req.Headers.Add("Accept-Encoding", "gzip, deflate");
+            ////Accept-Encoding:gzip, deflate
+
+            //req.Headers.Add("Accept-Language", "en-GB,en-US;q=0.8,en;q=0.6");
+            ////Accept-Language:en-GB,en-US;q=0.8,en;q=0.6
+
+            ////req.Headers.Add("Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+
+            ////req.KeepAlive = true;
+            ////Connection:keep-alive
+
+            ////req.Headers.Add("Keep-Alive: 90000");
+            ////req.AllowAutoRedirect = false;
+            //req.ContentType = "application/x-www-form-urlencoded";
+
+            //req.Host = "www.posnet.ykb.com";
+            ////Host:www.posnet.ykb.com
+
+
+
+            //req.Headers.Add("Cache-Control", "no-cache");
+            ////Cache-Control:no-cache
+
+            ////Content-Length:81
+
+
+            //// taking from perameters inserted into function
+
+            ////cookieJar.Add(new Uri("https://www.posnet.ykb.com"), new Cookie("JSESSIONID", Guid.NewGuid().ToString()));
+            ////cookieJar.Add(new Uri("https://www.posnet.ykb.com"), new Cookie("test", "cookiesEnabled"));
+            //////Cookie:test=cookiesEnabled; JSESSIONID=0000TE1swO4KX33cRDVpR6zhhUE:17g2875da
+
+            //req.CookieContainer = cookieJar;
+
+            //req.Headers.Add("Origin", "https://www.posnet.ykb.com");
+            ////Origin:https://www.posnet.ykb.com
+
+            //req.Headers.Add("Pragma", "no-cache");
+            ////Pragma:no-cache
+
+
+            //// req.Headers.Add("Referer", "https://www.posnet.ykb.com/PosnetF1/Login.jsp?dil=null");
+            //req.Referer = "https://www.posnet.ykb.com/PosnetF1/Search.jsp";
+            ////Referer:https://www.posnet.ykb.com/PosnetF1/Login.jsp?dil=null
+
+            //req.Headers.Add("Upgrade-Insecure-Requests", "1");
+            ////Upgrade-Insecure-Requests:1
+
+            ////                                                                                      * 
+            ////                                                                                      * 
+
+
+            //req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+
+            //StreamWriter sw = new StreamWriter(req.GetRequestStream());
+
+
+            //string tillDateString = "tempToDate=" + untilDateTime.Day.ToString().PadLeft(2, '0') + "-" + untilDateTime.Month.ToString().PadLeft(2, '0') + "-" + untilDateTime.Year.ToString() + "&to_day=" + untilDateTime.Day.ToString().PadLeft(2, '0') + "&to_month=" + untilDateTime.Month.ToString().PadLeft(2, '0') + "&to_year=" + untilDateTime.Year.ToString() + "&to_hour=" + untilDateTime.Hour.ToString().PadLeft(2, '0') + "&to_minute=" + untilDateTime.Minute.ToString().PadLeft(2, '0') + "";
+            ////tempToDate=30-08-2015&to_day=30&to_month=08&to_year=2015&to_hour=16&to_minute=00
+
+            //sw.Write("tempFromDate=01-01-2014&from_day=01&from_month=01&from_year=2014&from_hour=01&from_minute=00&" + tillDateString + "&radiobutton2=success&tran_type=All&selectTrio=tumu&selectVft=tumu&taksitTipi=tumu&currencyCode=tumu&radiobutton=orderid&host_orderid=" + orderID + "&from_amount=&to_amount=&Search=Search");
+
+            //sw.Close();
+
+            //HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+
+
+
+            //StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(1254));
+            //result = reader.ReadToEnd();
+
+            //req = null;
+            //response.Close();
+            //sw.Dispose();
+            //string[] chunks = result.Split('>');
+            //result = chunks[58].Split('&')[0];
+
+        }
+        public static void Before()
+		{
+
+			HttpClient client = new HttpClient();
+			NameValueCollection nvc = new NameValueCollection();
+			nvc.Add("email", "dawoodali@gmail.com");
+			nvc.Add("password", "Newzealand123!");
+			nvc.Add("remember", "true");
+
+			StringContent con = new StringContent(@"{'email':'dawoodali@gmail.com','password':'Newzealand123!','remember':'true'}");
+			string url = "https://app.sharesies.nz/login?next=%2Fportfolio";
+
+			var response = client.PostAsync(url, con);
+			string result = response.Result.Content.ToString();
+			Console.WriteLine(result);
+
+			//client.PostAsync("https://app.sharesies.nz/login?next=%2Fportfolio",new HttpContent {)
+
+		}

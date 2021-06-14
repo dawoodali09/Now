@@ -1,0 +1,10 @@
+﻿Login
+
+Fetch Info
+
+Test fetch
+History
+Buy 
+Sell
+
+Store 
