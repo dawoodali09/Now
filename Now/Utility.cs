@@ -42,7 +42,6 @@ namespace Now {
             return response;
 		}
 
-
         public static HttpWebResponse GetData(string requestURI, string payLoad, NameValueCollection headers) {
             HttpWebResponse response;
             
@@ -79,7 +78,6 @@ namespace Now {
             response = (HttpWebResponse)request.GetResponse();
             return response;
         }
-
 
         public static byte[] StreamToByteArray(Stream input) {
             byte[] buffer = new byte[16 * 1024];

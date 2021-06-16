@@ -8,7 +8,7 @@ namespace Now {
 
 		public User ReAuth(Session session);
 
-		public void GetShares(Session session);
+		public void FeedData(Session session);
 
 		public void GetInstruments(Session session);
 
