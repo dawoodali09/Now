@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -51,6 +52,60 @@ namespace Now {
 			sw.Close();
 		}
 
+		public void FeedPriceHistory(Session session, int LastRecordedId = 0) {
+			// this function will make a call to sharesied and load import all the missing data into database 
+			// if data is already present it will update the data that needed to be updated
+			// it will also add data that needed for history.
+			DataAccess.Models.NowDBContext con = new DataAccess.Models.NowDBContext();
+			
+
+			foreach (var sh in con.Instruments.Where(s=> s.Id > LastRecordedId).ToList()) {
+				List<PriceHistory> historyList = new List<PriceHistory>();
+				HttpClient _httpClient = new HttpClient();
+				_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.session.credentials.auth_token);
+				string requestUri = "https://data.sharesies.nz/api/v1/instruments/"  + sh.Shid.ToString() + "/pricehistory";
+				HttpResponseMessage httpResponse = _httpClient.GetAsync(requestUri).Result;
+				var res = httpResponse.Content.ReadAsStringAsync();
+				
+				if(res.IsCompleted){
+					var response = res.Result;
+					if( response.Contains("Auth expired"))
+					{
+						Trader ninja = new Trader();
+						if (string.IsNullOrEmpty(ninja.session.credentials.auth_token)) {
+							string email = "dawoodali@gmail.com"; // should come from config.
+							string password = "Newzealand123!";// should come from config.
+							ninja.Login(new Credentials() { email = email, password = password });
+							this.session = ninja.session;
+						}
+						FeedPriceHistory(ninja.session, sh.Id - 1);
+					}
+					var JobjectResponse = Newtonsoft.Json.Linq.JObject.Parse(response);
+					var pHistory = JobjectResponse["dayPrices"];
+
+					//   \"2015-08-31\": 28.19
+					foreach ( var his in pHistory)
+					{
+						string str = his.ToString().Replace("\\",string.Empty);
+						str = his.ToString().Replace("\"", string.Empty);
+						str = str.Trim();						
+						DateTime dt = DateTime.Parse(str.Split(':')[0].Trim());
+						decimal mon = decimal.Parse(str.Split(':')[1].Trim());
+						PriceHistory dph = new PriceHistory() { InstrumentId = sh.Id, Price = mon, RecordedOn = dt };
+						historyList.Add(dph);
+					}
+					NowDBContext newCon = new NowDBContext();
+					newCon.PriceHistories.AddRange(historyList.AsEnumerable());
+					newCon.SaveChanges();
+					newCon.Dispose();
+					Random rnd = new Random(15);
+					int waitTime = rnd.Next(3, 15);
+					System.Threading.Thread.Sleep(waitTime);
+					Console.WriteLine(" " + sh.Name + " Done;");
+				}
+			}
+		}
+
 		public void FeedData(Session session) {
 			// this function will make a call to sharesied and load import all the missing data into database 
 			// if data is already present it will update the data that needed to be updated
@@ -63,7 +118,7 @@ namespace Now {
 				PageNumber++;
 				HttpClient _httpClient = new HttpClient();
 				_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.session.credentials.auth_token);
-				string requestUri = "https://data.sharesies.nz/api/v1/instruments?Page="+ PageNumber.ToString().Trim() + "&PerPage=60&Sort=marketCap&PriceChangeTime=1y&Query=&InstrumentTypes=equity";
+				string requestUri = "https://data.sharesies.nz/api/v1/instruments?Page=" + PageNumber.ToString().Trim() + "&PerPage=60&Sort=marketCap&PriceChangeTime=1y&Query=&InstrumentTypes=equity";
 				HttpResponseMessage httpResponse = _httpClient.GetAsync(requestUri).Result;
 				var res = httpResponse.Content.ReadAsStringAsync();
 				InstrumentDataResponse ird = new InstrumentDataResponse();
@@ -75,13 +130,12 @@ namespace Now {
 				sw.Write(res.Result.ToString());
 				sw.Close();
 				Console.WriteLine("Processing PAge " + PageNumber.ToString() + Environment.NewLine);
-				foreach(var ins in ird.Instruments)
-				{
+				foreach (var ins in ird.Instruments) {
 					DataAccess.Models.NowDBContext con = new DataAccess.Models.NowDBContext();
 
 					//store the market
 					Market mkt = new Market();
-					if (!con.Markets.Any(x=> x.Code == ins.Exchange)){						
+					if (!con.Markets.Any(x => x.Code == ins.Exchange)) {
 						mkt.Code = ins.Exchange;
 						mkt.Country = ins.ExchangeCountry;
 						mkt.Currency = "USD";
@@ -89,18 +143,16 @@ namespace Now {
 						mkt.Name = ins.Exchange;
 						con.Markets.Add(mkt);
 						con.SaveChanges();
-					}else
-                    {
+					} else {
 						mkt = con.Markets.FirstOrDefault(x => x.Code == ins.Exchange);
 					}
 					// update the market data..
 
 
 					// store the instrument 
-					DataAccess.Models.Instrument  dbIns = new DataAccess.Models.Instrument();
-					if(!con.Instruments.Any(x=> x.Shid == Guid.Parse(ins.Id))){
-						dbIns = new DataAccess.Models.Instrument()
-						{
+					DataAccess.Models.Instrument dbIns = new DataAccess.Models.Instrument();
+					if (!con.Instruments.Any(x => x.Shid == Guid.Parse(ins.Id))) {
+						dbIns = new DataAccess.Models.Instrument() {
 							AnnualisedReturnPercent = (string.IsNullOrEmpty(ins.AnnualisedReturnPercent) ? 0 : float.Parse(ins.AnnualisedReturnPercent)),
 							Categories = String.Join(",", ins.Categories.ToArray<string>()), // ins.Categories,
 							Ceo = ins.Ceo,
@@ -112,7 +164,7 @@ namespace Now {
 							KidsRecommended = ins.KidsRecommended,
 							MarketCap = ins.MarketCap,
 							MarketId = con.Markets.Where(s => s.Code == ins.Exchange).FirstOrDefault().Id,
-							MarketPrice =  string.IsNullOrEmpty(ins.MarketPrice) ? 0.00M : decimal.Parse(ins.MarketPrice),
+							MarketPrice = string.IsNullOrEmpty(ins.MarketPrice) ? 0.00M : decimal.Parse(ins.MarketPrice),
 							Name = ins.Name,
 							Peratio = string.IsNullOrEmpty(ins.PeRatio) ? 0.00M : decimal.Parse(ins.PeRatio),
 							RiskRating = ins.RiskRating,
@@ -123,23 +175,21 @@ namespace Now {
 						};
 						mkt.IsOpen = (ins.TradingStatus == "active");
 						con.Instruments.Add(dbIns);
-                    }
-					else
-                    {
+					} else {
 						dbIns = con.Instruments.FirstOrDefault(x => x.Shid == Guid.Parse(ins.Id));
-						
+
 						dbIns.AnnualisedReturnPercent = (string.IsNullOrEmpty(ins.AnnualisedReturnPercent) ? 0 : float.Parse(ins.AnnualisedReturnPercent));
 						dbIns.Ceo = ins.Ceo;
 						dbIns.Employee = ins.Employees;
-						dbIns.GrossDividendYieldPercent =  string.IsNullOrEmpty(ins.GrossDividendYieldPercent) ? 0 : float.Parse(ins.GrossDividendYieldPercent);
+						dbIns.GrossDividendYieldPercent = string.IsNullOrEmpty(ins.GrossDividendYieldPercent) ? 0 : float.Parse(ins.GrossDividendYieldPercent);
 						dbIns.InstrumentType = ins.InstrumentType;
 						dbIns.IssVolatile = ins.IsVolatile;
 						dbIns.KidsRecommended = ins.KidsRecommended;
 						dbIns.MarketCap = ins.MarketCap;
 						dbIns.MarketId = con.Markets.Where(s => s.Code == ins.Exchange).FirstOrDefault().Id;
-						dbIns.MarketPrice =  string.IsNullOrEmpty(ins.MarketPrice) ? 0.00M : decimal.Parse(ins.MarketPrice);
+						dbIns.MarketPrice = string.IsNullOrEmpty(ins.MarketPrice) ? 0.00M : decimal.Parse(ins.MarketPrice);
 						dbIns.Name = ins.Name;
-						dbIns.Peratio =  string.IsNullOrEmpty(ins.PeRatio) ? 0.00M : decimal.Parse(ins.PeRatio);
+						dbIns.Peratio = string.IsNullOrEmpty(ins.PeRatio) ? 0.00M : decimal.Parse(ins.PeRatio);
 						dbIns.RiskRating = ins.RiskRating;
 						dbIns.Shid = Guid.Parse(ins.Id);
 						dbIns.Symbol = ins.Symbol;

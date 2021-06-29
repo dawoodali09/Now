@@ -362,5 +362,15 @@ namespace Now {
         public IReadOnlyList<UserList> UserList { get; }
     }
 
+    public class DayPrice{
+        public DateTime Day { get; set; }
+        public decimal  Price { get; set; }
+    }
 
+    public class ResponsePriceHistory{
+    public Guid instrumentId { get; set; }
+    public DateTime first { get; set; }
+    public DateTime last { get; set; }
+    public List<DayPrice> dayPrices { get; set; }
+    }
 }

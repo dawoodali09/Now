@@ -20,6 +20,7 @@ namespace DataAccess.Models
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Instrument> Instruments { get; set; }
         public virtual DbSet<Market> Markets { get; set; }
+        public virtual DbSet<PriceHistory> PriceHistories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -98,7 +99,7 @@ namespace DataAccess.Models
                     .WithMany(p => p.Instruments)
                     .HasForeignKey(d => d.MarketId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Instrumen__Marke__4BAC3F29");
+                    .HasConstraintName("FK__Instrumen__Marke__5070F446");
             });
 
             modelBuilder.Entity<Market>(entity =>
@@ -116,6 +117,21 @@ namespace DataAccess.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<PriceHistory>(entity =>
+            {
+                entity.ToTable("PriceHistory");
+
+                entity.Property(e => e.Price).HasColumnType("money");
+
+                entity.Property(e => e.RecordedOn).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Instrument)
+                    .WithMany(p => p.PriceHistories)
+                    .HasForeignKey(d => d.InstrumentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PriceHist__Instr__5EBF139D");
             });
 
             OnModelCreatingPartial(modelBuilder);

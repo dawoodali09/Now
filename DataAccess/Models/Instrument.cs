@@ -7,6 +7,11 @@ namespace DataAccess.Models
 {
     public partial class Instrument
     {
+        public Instrument()
+        {
+            PriceHistories = new HashSet<PriceHistory>();
+        }
+
         public int Id { get; set; }
         public Guid Shid { get; set; }
         public string InstrumentType { get; set; }
@@ -29,5 +34,6 @@ namespace DataAccess.Models
         public int? Employee { get; set; }
 
         public virtual Market Market { get; set; }
+        public virtual ICollection<PriceHistory> PriceHistories { get; set; }
     }
 }

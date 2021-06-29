@@ -61,6 +61,7 @@
     <Build Include="Currencies.sql" />
     <Build Include="Markets.sql" />
     <Build Include="Instruments.sql" />
+    <Build Include="PriceHistory.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NowDB.publish.xml" />
