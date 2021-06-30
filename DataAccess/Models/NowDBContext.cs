@@ -17,6 +17,7 @@ namespace DataAccess.Models
         {
         }
 
+        public virtual DbSet<ClosingDay> ClosingDays { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Instrument> Instruments { get; set; }
         public virtual DbSet<Market> Markets { get; set; }
@@ -34,6 +35,22 @@ namespace DataAccess.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<ClosingDay>(entity =>
+            {
+                entity.Property(e => e.ClosingDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Reason)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .HasDefaultValueSql("('Weekend')");
+
+                entity.HasOne(d => d.Market)
+                    .WithMany(p => p.ClosingDays)
+                    .HasForeignKey(d => d.MarketId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ClosingDa__Marke__0E6E26BF");
+            });
 
             modelBuilder.Entity<Currency>(entity =>
             {
@@ -104,6 +121,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<Market>(entity =>
             {
+                entity.Property(e => e.ClosingTimeNz).HasColumnName("ClosingTimeNZ");
+
                 entity.Property(e => e.Code)
                     .IsRequired()
                     .HasMaxLength(100);
@@ -117,11 +136,15 @@ namespace DataAccess.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.OpeningTimeNz).HasColumnName("OpeningTimeNZ");
             });
 
             modelBuilder.Entity<PriceHistory>(entity =>
             {
                 entity.ToTable("PriceHistory");
+
+                entity.HasIndex(e => e.InstrumentId, "NonClusteredIndex-PriceHistory-InstrumentId");
 
                 entity.Property(e => e.Price).HasColumnType("money");
 

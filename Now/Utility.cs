@@ -5,6 +5,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using DataAccess;
+using DataAccess.Models;
 
 namespace Now {
 	public static class Utility {
@@ -97,6 +99,27 @@ namespace Now {
                 zipStream.CopyTo(resultStream);
                 return resultStream.ToArray();
             }
+        }
+
+        public static void CLoseWeekends(){
+            DateTime today = DateTime.Now;
+            while(today.Year < 2023){
+                today= today.AddDays(1);
+                if(today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday){
+                    AddClosingDay(1, today, "Weekend");
+                    AddClosingDay(2, today, "Weekend");
+                    AddClosingDay(3, today, "Weekend");
+                    AddClosingDay(4, today, "Weekend");
+                    AddClosingDay(5, today, "Weekend");
+                }
+            }
+        }
+        public static void AddClosingDay(int mktID, DateTime ClosingDay, string ClosingReason){
+            ClosingDay cd = new ClosingDay() { ClosingDate = ClosingDay, MarketId = mktID, Reason= ClosingReason };
+            NowDBContext con = new NowDBContext();
+            con.ClosingDays.Add(cd);
+            con.SaveChanges();
+            con.Dispose();            
         }
     }
 }

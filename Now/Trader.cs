@@ -52,6 +52,27 @@ namespace Now {
 			sw.Close();
 		}
 
+		public void EXP(Session session) {
+
+			HttpClient _httpClient = new HttpClient();
+			_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.session.credentials.auth_token);
+			string requestUri = "https://data.sharesies.nz/api/v1/instruments/info";
+			HttpResponseMessage httpResponse = _httpClient.GetAsync(requestUri).Result;
+			var res = httpResponse.Content.ReadAsStringAsync();
+		}
+
+		public void EXP2(Session session) {
+ 
+
+			//'fund_id={}&first={}&last={}'.format(
+//				company['id'], '2000-01-01', today.strftime("%Y-%m-%d")
+			HttpClient _httpClient = new HttpClient();
+			_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.session.credentials.auth_token);
+			string requestUri = "https://app.sharesies.nz/api/fund/price-history?'id=C218F7FC-7A19-4527-B1FE-E7E71935E6FE&first=2021-06-01&last=2020-06-30";
+			HttpResponseMessage httpResponse = _httpClient.GetAsync(requestUri).Result;
+			var res = httpResponse.Content.ReadAsStringAsync();
+		}
+
 		public void FeedPriceHistory(Session session, int LastRecordedId = 0) {
 			// this function will make a call to sharesied and load import all the missing data into database 
 			// if data is already present it will update the data that needed to be updated
@@ -193,9 +214,19 @@ namespace Now {
 						dbIns.RiskRating = ins.RiskRating;
 						dbIns.Shid = Guid.Parse(ins.Id);
 						dbIns.Symbol = ins.Symbol;
+						
+						//add another historic data 
+						if (dbIns.UpdatedOn != ins.MarketLastCheck && !string.IsNullOrEmpty(ins.MarketPrice)){
+							NowDBContext newCon = new NowDBContext();
+							newCon.PriceHistories.Add(new PriceHistory() { InstrumentId = dbIns.Id, RecordedOn = ins.MarketLastCheck, Price = decimal.Parse(ins.MarketPrice) });
+							newCon.SaveChanges();
+							newCon.Dispose();
+						}
+
 						dbIns.UpdatedOn = ins.MarketLastCheck;
 						dbIns.WebsiteUrl = ins.WebsiteUrl;
 					}
+					
 					con.SaveChanges();
 				}
 			}
@@ -231,6 +262,16 @@ namespace Now {
 
 		public void Sell(Session session, string company, int amount) {
 			throw new NotImplementedException();
+		}
+
+		public List<Market> GetOpenMarkets(){
+			List<Market> OpenMarkets = new List<Market>();
+			NowDBContext con = new NowDBContext();
+			TimeSpan currentNZTime = DateTime.Now.TimeOfDay;
+			DateTime today = DateTime.Now;
+			OpenMarkets = con.Markets.Where(s => s.OpeningTimeNz < currentNZTime && s.ClosingTimeNz > currentNZTime && !s.ClosingDays.Any(c => c.ClosingDate.Date == today.Date)).ToList();
+			con.Dispose();
+			return OpenMarkets;
 		}
 	}
 }

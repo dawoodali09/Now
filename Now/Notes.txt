@@ -1,4 +1,4 @@
-﻿Scaffold-DbContext "Server=Dawood-PC;Database=NowDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+﻿Scaffold-DbContext "Server=Dawood-PC;Database=NowDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -f
 
 import requests
 from datetime import date

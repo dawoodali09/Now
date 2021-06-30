@@ -1,0 +1,217 @@
+﻿{
+    "version": "1",
+    "filesHostAddress": "https://data.sharesies.nz",
+    "categories": ["Agriculture and fisheries", "Banking and finance", "Bonds and fixed income", "Currencies", "Energy and utilities", "Food and drink", "Healthcare", "Index funds", "Infrastructure", "Manufacturing", "Media", "Media & entertainment", "Mining, oil and gas", "Property", "Responsible", "Retail", "Services", "Strategic funds", "Technology", "Telecommunication services", "Tourism", "Transport"],
+    "exchanges": [{
+            "id": "167db4eb-efa9-4d60-848c-8a4e38851f07",
+            "name": "CBOE",
+            "country": "usa",
+            "currency": "USD",
+            "timeZone": "America/New_York",
+            "openHours": [{
+                    "start": "2021-06-29T13:30:00Z",
+                    "finish": "2021-06-29T20:00:00Z"
+                }, {
+                    "start": "2021-06-30T13:30:00Z",
+                    "finish": "2021-06-30T20:00:00Z"
+                }, {
+                    "start": "2021-07-01T13:30:00Z",
+                    "finish": "2021-07-01T20:00:00Z"
+                }, {
+                    "start": "2021-07-02T13:30:00Z",
+                    "finish": "2021-07-02T20:00:00Z"
+                }, {
+                    "start": "2021-07-06T13:30:00Z",
+                    "finish": "2021-07-06T20:00:00Z"
+                }, {
+                    "start": "2021-07-07T13:30:00Z",
+                    "finish": "2021-07-07T20:00:00Z"
+                }
+            ]
+        }, {
+            "id": "1e004e3b-269d-4c47-bb8f-4fe753dfb0b5",
+            "name": "NZX",
+            "country": "nzl",
+            "currency": "NZD",
+            "timeZone": "Pacific/Auckland",
+            "openHours": [{
+                    "start": "2021-06-29T22:00:00Z",
+                    "finish": "2021-06-30T05:00:00Z"
+                }, {
+                    "start": "2021-06-30T22:00:00Z",
+                    "finish": "2021-07-01T05:00:00Z"
+                }, {
+                    "start": "2021-07-01T22:00:00Z",
+                    "finish": "2021-07-02T05:00:00Z"
+                }, {
+                    "start": "2021-07-04T22:00:00Z",
+                    "finish": "2021-07-05T05:00:00Z"
+                }, {
+                    "start": "2021-07-05T22:00:00Z",
+                    "finish": "2021-07-06T05:00:00Z"
+                }, {
+                    "start": "2021-07-06T22:00:00Z",
+                    "finish": "2021-07-07T05:00:00Z"
+                }, {
+                    "start": "2021-07-07T22:00:00Z",
+                    "finish": "2021-07-08T05:00:00Z"
+                }
+            ]
+        }, {
+            "id": "2ae4b105-d6d2-4557-8924-f353300620e5",
+            "name": "NASDAQ",
+            "country": "usa",
+            "currency": "USD",
+            "timeZone": "America/New_York",
+            "openHours": [{
+                    "start": "2021-06-29T13:30:00Z",
+                    "finish": "2021-06-29T20:00:00Z"
+                }, {
+                    "start": "2021-06-30T13:30:00Z",
+                    "finish": "2021-06-30T20:00:00Z"
+                }, {
+                    "start": "2021-07-01T13:30:00Z",
+                    "finish": "2021-07-01T20:00:00Z"
+                }, {
+                    "start": "2021-07-02T13:30:00Z",
+                    "finish": "2021-07-02T20:00:00Z"
+                }, {
+                    "start": "2021-07-06T13:30:00Z",
+                    "finish": "2021-07-06T20:00:00Z"
+                }, {
+                    "start": "2021-07-07T13:30:00Z",
+                    "finish": "2021-07-07T20:00:00Z"
+                }
+            ]
+        }, {
+            "id": "328965f8-4f0e-4c65-b504-5d99de90f5b1",
+            "name": "ASX",
+            "country": "aus",
+            "currency": "AUD",
+            "timeZone": "Australia/Sydney",
+            "openHours": [{
+                    "start": "2021-06-30T00:00:00Z",
+                    "finish": "2021-06-30T06:12:00Z"
+                }, {
+                    "start": "2021-07-01T00:00:00Z",
+                    "finish": "2021-07-01T06:12:00Z"
+                }, {
+                    "start": "2021-07-02T00:00:00Z",
+                    "finish": "2021-07-02T06:12:00Z"
+                }, {
+                    "start": "2021-07-05T00:00:00Z",
+                    "finish": "2021-07-05T06:12:00Z"
+                }, {
+                    "start": "2021-07-06T00:00:00Z",
+                    "finish": "2021-07-06T06:12:00Z"
+                }, {
+                    "start": "2021-07-07T00:00:00Z",
+                    "finish": "2021-07-07T06:12:00Z"
+                }, {
+                    "start": "2021-07-08T00:00:00Z",
+                    "finish": "2021-07-08T06:12:00Z"
+                }
+            ]
+        }, {
+            "id": "eb190313-b902-410c-b3e4-f66b8272a883",
+            "name": "NYSE",
+            "country": "usa",
+            "currency": "USD",
+            "timeZone": "America/New_York",
+            "openHours": [{
+                    "start": "2021-06-29T13:30:00Z",
+                    "finish": "2021-06-29T20:00:00Z"
+                }, {
+                    "start": "2021-06-30T13:30:00Z",
+                    "finish": "2021-06-30T20:00:00Z"
+                }, {
+                    "start": "2021-07-01T13:30:00Z",
+                    "finish": "2021-07-01T20:00:00Z"
+                }, {
+                    "start": "2021-07-02T13:30:00Z",
+                    "finish": "2021-07-02T20:00:00Z"
+                }, {
+                    "start": "2021-07-06T13:30:00Z",
+                    "finish": "2021-07-06T20:00:00Z"
+                }, {
+                    "start": "2021-07-07T13:30:00Z",
+                    "finish": "2021-07-07T20:00:00Z"
+                }
+            ]
+        }
+    ],
+    "assetManagers": [{
+            "id": "c0e51608-38a3-4fc7-a2b1-a82aa6a097ca",
+            "name": "Salt Funds Management",
+            "websiteUrl": "https://www.carbonfund.co.nz/",
+            "shortName": "Salt Funds Management",
+            "timeZone": "Pacific/Auckland"
+        }, {
+            "id": "7cb1ca5b-1601-4fc3-bd2a-dfce3f2f9195",
+            "name": "Smartshares Limited",
+            "websiteUrl": "https://smartshares.co.nz/",
+            "shortName": "Smartshares",
+            "timeZone": "Pacific/Auckland"
+        }, {
+            "id": "5ad74a64-4f90-49c2-babc-e62d79c93430",
+            "name": "Pathfinder Asset Management Limited",
+            "websiteUrl": "https://www.path.co.nz/",
+            "shortName": "Pathfinder",
+            "timeZone": "Pacific/Auckland"
+        }, {
+            "id": "284ee603-5719-41ae-b650-0afe47e4e31f",
+            "name": "PIE Funds",
+            "websiteUrl": "https://www.piefunds.co.nz/",
+            "shortName": "PIE Funds",
+            "timeZone": "Pacific/Auckland"
+        }, {
+            "id": "d6e8d0ba-f291-4cc3-bb13-3b180a3864b5",
+            "name": "AMP Capital",
+            "websiteUrl": "https://www.ampcapital.com/nz/en/home",
+            "shortName": "AMP Capital",
+            "timeZone": "Pacific/Auckland"
+        }
+    ],
+    "instrumentTypes": [{
+            "id": "etf",
+            "name": "ETFs"
+        }, {
+            "id": "mf",
+            "name": "Managed funds"
+        }, {
+            "id": "equity",
+            "name": "Companies"
+        }, {
+            "id": "adr",
+            "name": "ADRs"
+        }, {
+            "id": "etp",
+            "name": "ETPs"
+        }
+    ],
+    "filterOptions": ["categories", "exchangeCountries", "exchanges", "instruments", "instrumentTypes", "kidsRecommended", "nz", "riskRating", "tradingStatuses", "visibleTo", "query"],
+    "sortOptions": [{
+            "id": "priceChange",
+            "name": "Highest price change"
+        }, {
+            "id": "relevance",
+            "name": "Most relevant"
+        }, {
+            "id": "returns",
+            "name": "Highest annual returns"
+        }, {
+            "id": "dividends",
+            "name": "Highest annual dividends"
+        }, {
+            "id": "marketCap",
+            "name": "Market cap"
+        }, {
+            "id": "name",
+            "name": "A-Z"
+        }, {
+            "id": "fundsThenEquities",
+            "name": "Portfolio Sort"
+        }
+    ],
+    "priceChangeTimeOptions": ["1d", "1w", "1m", "3m", "6m", "1y", "5y"]
+}

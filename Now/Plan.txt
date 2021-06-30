@@ -4,7 +4,27 @@ Fetch Info
 
 Test fetch
 History
+
+Suggest ???? ? ?
+
 Buy 
 Sell
 
 Store 
+
+
+https://app.sharesies.com/api/accounting/stats-v3?acting_as_id=5af545c8-e9a5-40ff-9c17-66a6f6bdcf6b  (for getting all stats on portfolio from share...)
+https://app.sharesies.com/api/accounting/transaction-history?limit=50&acting_as_id=5af545c8-e9a5-40ff-9c17-66a6f6bdcf6b
+https://api-iam.intercom.io/messenger/web/ping
+
+https://data.sharesies.nz/api/v1/instruments?Instruments=a782f521-7e8d-4e89-ba34-cd939de0a7df&Instruments=0d54206b-d797-4cac-929c-76fb781b2015&Instruments=b8b7ef58-b270-4762-a256-9d68aebc3e23&Instruments=c6c222e4-4f8a-4e72-b728-640f4c3e4445&Instruments=2da1932b-82e2-4fca-98cf-f9ecf962e15a
+
+https://data.sharesies.nz/api/v1/instruments?
+Instruments=a782f521-7e8d-4e89-ba34-cd939de0a7df&
+Instruments=0d54206b-d797-4cac-929c-76fb781b2015&
+Instruments=b8b7ef58-b270-4762-a256-9d68aebc3e23&
+Instruments=c6c222e4-4f8a-4e72-b728-640f4c3e4445&
+Instruments=2da1932b-82e2-4fca-98cf-f9ecf962e15a
+
+
+Request URL: https://data.sharesies.nz/api/v1/instruments/a67b4500-9f62-4469-b6cd-deeb909d0b48/dividends

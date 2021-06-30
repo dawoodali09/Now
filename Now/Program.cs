@@ -9,14 +9,23 @@ namespace Now {
 	class Program {
       
 		static void Main(string[] args) {
-          
-            Trader ninja = new Trader();    
+
+            
+            //Utility.CLoseWeekends();
+            Trader ninja = new Trader();  
+            
+            //foreach(var mkt in ninja.GetOpenMarkets())
+            //{
+            //    Console.WriteLine(mkt.Name + "is open");
+            //}
+
             if (string.IsNullOrEmpty(ninja.session.credentials.auth_token)) {
                 string email = "dawoodali@gmail.com"; // should come from config.
                 string password = "Newzealand123!";// should come from config.
                 ninja.Login(new Credentials() { email = email, password = password });
             }
-            ninja.FeedPriceHistory(ninja.session,2458);
+            ninja.EXP2(ninja.session);
+            //ninja.FeedPriceHistory(ninja.session,2458);
             //ninja.FeedData(ninja.session);
 
         }

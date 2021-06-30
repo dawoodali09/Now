@@ -62,6 +62,7 @@
     <Build Include="Markets.sql" />
     <Build Include="Instruments.sql" />
     <Build Include="PriceHistory.sql" />
+    <Build Include="ClosingDays.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NowDB.publish.xml" />
