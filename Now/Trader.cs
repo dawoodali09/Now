@@ -1,9 +1,7 @@
 ﻿using DataAccess.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -40,16 +38,16 @@ namespace Now {
 			suppliedCredentials.portfolioID = parsed.SelectToken("user.portfolio_id").ToString();
 			this.session.credentials = suppliedCredentials;
 
-			// store all response header keys
-			if(File.Exists("C:\\temp\\headers.txt")) {
-				File.Delete("C:\\temp\\headers.txt");
-			}
-			System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\temp\\headers.txt", true);
-			foreach (var hk in response.Headers) {
-				this.session.headers.Add(hk.ToString(), response.Headers[hk.ToString()]);
-				sw.WriteLine(hk.ToString() + " : " + response.Headers[hk.ToString()]);
-			}
-			sw.Close();
+			// store all response header keys in future maybe not now.
+			//if(File.Exists("C:\\temp\\headers.txt")) {
+			//	File.Delete("C:\\temp\\headers.txt");
+			//}
+			//System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\temp\\headers.txt", true);
+			//foreach (var hk in response.Headers) {
+			//	this.session.headers.Add(hk.ToString(), response.Headers[hk.ToString()]);
+			//	sw.WriteLine(hk.ToString() + " : " + response.Headers[hk.ToString()]);
+			//}
+			//sw.Close();
 		}
 
 		public void EXP(Session session) {
@@ -73,13 +71,12 @@ namespace Now {
 			var res = httpResponse.Content.ReadAsStringAsync();
 		}
 
+		//its a very long running method usually it fetches 5 years data for each stock.
 		public void FeedPriceHistory(Session session, int LastRecordedId = 0) {
 			// this function will make a call to sharesied and load import all the missing data into database 
 			// if data is already present it will update the data that needed to be updated
 			// it will also add data that needed for history.
 			DataAccess.Models.NowDBContext con = new DataAccess.Models.NowDBContext();
-			
-
 			foreach (var sh in con.Instruments.Where(s=> s.Id > LastRecordedId).ToList()) {
 				List<PriceHistory> historyList = new List<PriceHistory>();
 				HttpClient _httpClient = new HttpClient();
@@ -119,10 +116,7 @@ namespace Now {
 					NowDBContext newCon = new NowDBContext();
 					newCon.PriceHistories.AddRange(historyList.AsEnumerable());
 					newCon.SaveChanges();
-					newCon.Dispose();
-					Random rnd = new Random(15);
-					int waitTime = rnd.Next(3, 15);
-					System.Threading.Thread.Sleep(waitTime);
+					newCon.Dispose();					
 					Console.WriteLine(" " + sh.Name + " Done;");
 				}
 			}
@@ -147,10 +141,6 @@ namespace Now {
 				ird = JsonConvert.DeserializeObject<InstrumentDataResponse>(res.Result);
 				allPagesDone = (ird.NumberOfPages == ird.CurrentPage);
 
-
-				StreamWriter sw = new StreamWriter("C:\\temp\\shares\\" + PageNumber.ToString() + ".txt");
-				sw.Write(res.Result.ToString());
-				sw.Close();
 				Console.WriteLine("Processing PAge " + PageNumber.ToString() + Environment.NewLine);
 				foreach (var ins in ird.Instruments) {
 					DataAccess.Models.NowDBContext con = new DataAccess.Models.NowDBContext();
@@ -169,7 +159,6 @@ namespace Now {
 						mkt = con.Markets.FirstOrDefault(x => x.Code == ins.Exchange);
 					}
 					// update the market data..
-
 
 					// store the instrument 
 					DataAccess.Models.Instrument dbIns = new DataAccess.Models.Instrument();
@@ -199,7 +188,6 @@ namespace Now {
 						con.Instruments.Add(dbIns);
 					} else {
 						dbIns = con.Instruments.FirstOrDefault(x => x.Shid == Guid.Parse(ins.Id));
-
 						dbIns.AnnualisedReturnPercent = (string.IsNullOrEmpty(ins.AnnualisedReturnPercent) ? 0 : float.Parse(ins.AnnualisedReturnPercent));
 						dbIns.Ceo = ins.Ceo;
 						dbIns.Employee = ins.Employees;
@@ -223,11 +211,9 @@ namespace Now {
 							newCon.SaveChanges();
 							newCon.Dispose();
 						}
-
 						dbIns.UpdatedOn = ins.MarketLastCheck;
 						dbIns.WebsiteUrl = ins.WebsiteUrl;
-					}
-					
+					}					
 					con.SaveChanges();
 				}
 			}
