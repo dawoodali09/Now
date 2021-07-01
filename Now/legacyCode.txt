@@ -39,7 +39,7 @@
             //request.Headers["Accept-Encoding"] = "gzip, deflate, br";
             //request.Headers["Accept-Language"] = "en-GB,en-US;q=0.9,en;q=0.8";
 
-            //var postData = "{\"email\":\"dawoodali@gmail.com\",\"password\":\"Newzealand123!\",\"remember\":false}";            
+            //var postData = "{\"email\":\"xxx@mail.com\",\"password\":\"xxxxxx!\",\"remember\":false}";            
             //var data = Encoding.ASCII.GetBytes(postData);
 
             //request.Method = "POST";
@@ -80,7 +80,7 @@
 
    
             
-           // string parametersJson = "{'email:dawoodali@gmail.com','password:Newzealand123!', 'remember:true'}";
+           // string parametersJson = "{'email:xxx@gmail.com','password:xxxxx!', 'remember:true'}";
            // var response = httpClient.PostAsync(url, new StringContent(parametersJson)).Result;
 
             // response.EnsureSuccessStatusCode();
@@ -114,7 +114,7 @@
                 //             "_gid=GA1.3.402229557.1618524179");
                 //wc.Headers["Content-Type"] = "application/json";
 
-               // wc.UploadString("https://app.sharesies.com/api/identity/login", "{\"email\":\"dawoodali@gmail.com\",\"password\":\"Newzealand123!\",\"remember\":true}").;
+               // wc.UploadString("https://app.sharesies.com/api/identity/login", "{\"email\":\"xxxx@gmail.com\",\"password\":\"xxxxx!\",\"remember\":true}").;
                 var stream = wc.OpenRead(address);
                 using (StreamReader sr = new StreamReader(stream)) {
                     var page = sr.ReadToEnd();
@@ -141,7 +141,7 @@
             //wc.Headers["Content-Type"] = "application/json";
 
 
-            //string response = wc.UploadString("https://app.sharesies.com/api/identity/login","{\"email\":\"dawoodali@gmail.com\",\"password\":\"Newzealand123!\",\"remember\":true}");
+            //string response = wc.UploadString("https://app.sharesies.com/api/identity/login","{\"email\":\"xxxxx@gmail.com\",\"password\":\"xxxxx!\",\"remember\":true}");
         }
 
         public static void old()
@@ -248,11 +248,11 @@
 
 			HttpClient client = new HttpClient();
 			NameValueCollection nvc = new NameValueCollection();
-			nvc.Add("email", "dawoodali@gmail.com");
-			nvc.Add("password", "Newzealand123!");
+			nvc.Add("email", "xxxx@gmail.com");
+			nvc.Add("password", "xxxx!");
 			nvc.Add("remember", "true");
 
-			StringContent con = new StringContent(@"{'email':'dawoodali@gmail.com','password':'Newzealand123!','remember':'true'}");
+			StringContent con = new StringContent(@"{'email':'xxxx@gmail.com','password':'xxxxx!','remember':'true'}");
 			string url = "https://app.sharesies.nz/login?next=%2Fportfolio";
 
 			var response = client.PostAsync(url, con);

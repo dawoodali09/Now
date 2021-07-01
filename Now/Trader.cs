@@ -94,8 +94,8 @@ namespace Now {
 					{
 						Trader ninja = new Trader();
 						if (string.IsNullOrEmpty(ninja.session.credentials.auth_token)) {
-							string email = "dawoodali@gmail.com"; // should come from config.
-							string password = "Newzealand123!";// should come from config.
+							string email = "xxx@gmail.com"; // should come from config.
+							string password = "xxxx!";// should come from config.
 							ninja.Login(new Credentials() { email = email, password = password });
 							this.session = ninja.session;
 						}
