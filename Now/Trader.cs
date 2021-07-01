@@ -65,7 +65,7 @@ namespace Now {
  
 
 			//'fund_id={}&first={}&last={}'.format(
-//				company['id'], '2000-01-01', today.strftime("%Y-%m-%d")
+			//company['id'], '2000-01-01', today.strftime("%Y-%m-%d")
 			HttpClient _httpClient = new HttpClient();
 			_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.session.credentials.auth_token);
 			string requestUri = "https://app.sharesies.nz/api/fund/price-history?'id=C218F7FC-7A19-4527-B1FE-E7E71935E6FE&first=2021-06-01&last=2020-06-30";
@@ -100,6 +100,7 @@ namespace Now {
 							this.session = ninja.session;
 						}
 						FeedPriceHistory(ninja.session, sh.Id - 1);
+						return;
 					}
 					var JobjectResponse = Newtonsoft.Json.Linq.JObject.Parse(response);
 					var pHistory = JobjectResponse["dayPrices"];

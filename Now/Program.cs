@@ -24,9 +24,9 @@ namespace Now {
                 string password = "Newzealand123!";// should come from config.
                 ninja.Login(new Credentials() { email = email, password = password });
             }
-            ninja.EXP2(ninja.session);
+            //ninja.EXP2(ninja.session);
             //ninja.FeedPriceHistory(ninja.session,2458);
-            //ninja.FeedData(ninja.session);
+            ninja.FeedData(ninja.session);
 
         }
 	}
