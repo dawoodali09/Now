@@ -1,10 +1,4 @@
-﻿using System.Net.Http;
-using Newtonsoft.Json;
-using DataAccess;
-using DataAccess.Models;
-using Microsoft.Extensions.Configuration;
-using System;
-
+﻿using Trader ;
 
 namespace Now {
     class Program {
@@ -12,8 +6,9 @@ namespace Now {
 
 
         static void Main(string[] args) {
-        
-     
+            Trade trader = new Trade();
+            trader.Login(new Credentials() { email = "dawoodali@gmail.com", password = "Newzealand123!" });
+            trader.FeedData(trader.session);
 
             ////Utility.CLoseWeekends();
             //Trader ninja = new Trader();  

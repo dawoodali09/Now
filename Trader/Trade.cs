@@ -9,9 +9,9 @@ using System.Text;
  
 
 namespace Trader {
-	public class Trader : ITrade {
+	public class Trade : ITrade {
 		
-		public Trader() {
+		public Trade() {
 			this.session = new Session() {
 				account = null,
 				credentials = new Credentials() { auth_token = string.Empty, email = string.Empty, password = string.Empty },
@@ -90,7 +90,7 @@ namespace Trader {
 				if (res.IsCompleted) {
 					var response = res.Result;
 					if (response.Contains("Auth expired")) {
-						Trader ninja = new Trader();
+						Trade ninja = new Trade();
 						if (string.IsNullOrEmpty(ninja.session.credentials.auth_token)) {
 							string email = "xxx@gmail.com"; // should come from config.
 							string password = "xxxx!";// should come from config.
