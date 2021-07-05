@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "NowDB", "NowDB\NowDB.sqlproj", "{59A6EB4F-CA40-4E85-9076-357B613EF21A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trader", "Trader\Trader.csproj", "{FFF86DF2-FF6C-43CC-8DEF-A881E00D9CEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trader", "Trader\Trader.csproj", "{FFF86DF2-FF6C-43CC-8DEF-A881E00D9CEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.csproj", "{2A45FB03-54D3-4B17-87C8-41C022567314}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "Utility\Utility.csproj", "{2A45FB03-54D3-4B17-87C8-41C022567314}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyst", "Analyst\Analyst.csproj", "{633EF114-C4E5-4FB9-9D9A-CBA800E20FD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{2A45FB03-54D3-4B17-87C8-41C022567314}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A45FB03-54D3-4B17-87C8-41C022567314}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A45FB03-54D3-4B17-87C8-41C022567314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{633EF114-C4E5-4FB9-9D9A-CBA800E20FD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{633EF114-C4E5-4FB9-9D9A-CBA800E20FD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{633EF114-C4E5-4FB9-9D9A-CBA800E20FD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{633EF114-C4E5-4FB9-9D9A-CBA800E20FD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
