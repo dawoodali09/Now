@@ -9,6 +9,7 @@ namespace Now {
             Trade trader = new Trade();
             trader.Login(new Credentials() { email = "dawoodali@gmail.com", password = "Newzealand123!" });
             trader.FeedData(trader.session);
+            //trader.FeedPriceHistory(trader.session);
 
             ////Utility.CLoseWeekends();
             //Trader ninja = new Trader();  
