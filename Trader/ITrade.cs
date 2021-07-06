@@ -1,4 +1,6 @@
-﻿namespace Trader {
+﻿using Models;
+
+namespace Trader {
 	interface ITrade {
 		public void Login(Credentials crendials);
 

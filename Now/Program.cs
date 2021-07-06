@@ -1,13 +1,12 @@
 ﻿using Trader ;
+using Models;
 
 namespace Now {
     class Program {
 
-
-
         static void Main(string[] args) {
             Trade trader = new Trade();
-            trader.Login(new Credentials() { email = "dawoodali@gmail.com", password = "Newzealand123!" });
+            trader.Login(new Credentials() { email = "dawoodali@gmail.com", password = ".....!" });
             trader.FeedData(trader.session);
             //trader.FeedPriceHistory(trader.session);
 
