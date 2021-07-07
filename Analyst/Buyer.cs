@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Analyst {
+﻿namespace Analyst {
 	public class Buyer {
 		public BuyingRules ruler = new BuyingRules();
 	}

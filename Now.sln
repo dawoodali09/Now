@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Now", "Now\Now.csproj", "{FCF318BA-AECF-4801-963F-907529BD9B23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NowConsole", "Now\NowConsole.csproj", "{FCF318BA-AECF-4801-963F-907529BD9B23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{3B68DB3D-24CF-4F4E-9924-8FACA2222641}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLDataAccess", "DataAccess\SQLDataAccess.csproj", "{3B68DB3D-24CF-4F4E-9924-8FACA2222641}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "NowDB", "NowDB\NowDB.sqlproj", "{59A6EB4F-CA40-4E85-9076-357B613EF21A}"
 EndProject
@@ -13,11 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trader", "Trader\Trader.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "Utility\Utility.csproj", "{2A45FB03-54D3-4B17-87C8-41C022567314}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyst", "Analyst\Analyst.csproj", "{633EF114-C4E5-4FB9-9D9A-CBA800E20FD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyst", "Analyst\Analyst.csproj", "{633EF114-C4E5-4FB9-9D9A-CBA800E20FD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoAccess", "MongoAccess\MongoAccess.csproj", "{D00626D4-9DC7-458D-A9A3-84184BB34B63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoAccess", "MongoAccess\MongoAccess.csproj", "{D00626D4-9DC7-458D-A9A3-84184BB34B63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{CE23B7F6-2AA6-4D0C-9B13-03D1BA9C00DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{CE23B7F6-2AA6-4D0C-9B13-03D1BA9C00DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

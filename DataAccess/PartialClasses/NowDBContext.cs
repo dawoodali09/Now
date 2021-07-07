@@ -1,15 +1,12 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Models {
-	public partial class NowDBContext : DbContext
-	{
+namespace SQLDataAccess.Models {
+	public partial class NowDBContext : DbContext {
 		public NowDBContext(string ConnectionString) {
-			
-			
+
+
 
 		}
-	
+
 	}
 }

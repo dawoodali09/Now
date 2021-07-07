@@ -1,5 +1,3 @@
-﻿using System.Collections.Specialized;
+﻿namespace Trader {
 
-namespace Trader {
-	
 }

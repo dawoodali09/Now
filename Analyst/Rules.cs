@@ -1,8 +1,6 @@
 ﻿using Analyst.Interfaces;
+using SQLDataAccess.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DataAccess.Models;
 using System.Linq;
 
 namespace Analyst {
@@ -11,7 +9,7 @@ namespace Analyst {
 		public abstract int GetDecisionPoints(int stockId);
 	}
 
-	public class BuyingRules : Rules,IBuyingRules {
+	public class BuyingRules : Rules, IBuyingRules {
 		public override int GetDecisionPoints(int stockId) {
 			DecisionPoints = 0;
 
@@ -21,9 +19,9 @@ namespace Analyst {
 				return -1;
 			else
 				ins = con.Instruments.Where(s => s.Id == stockId).FirstOrDefault();
-		 
-				
-			DecisionPoints += ins.Peratio.HasValue ?  PERationRule(ins.Peratio.Value) : PERationRule(0);
+
+
+			DecisionPoints += ins.Peratio.HasValue ? PERationRule(ins.Peratio.Value) : PERationRule(0);
 
 			return DecisionPoints;
 		}

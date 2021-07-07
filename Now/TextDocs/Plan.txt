@@ -28,3 +28,8 @@ Instruments=2da1932b-82e2-4fca-98cf-f9ecf962e15a
 
 
 Request URL: https://data.sharesies.nz/api/v1/instruments/a67b4500-9f62-4469-b6cd-deeb909d0b48/dividends
+
+https://nz.finance.yahoo.com/most-active?offset=1&count=100
+https://au.finance.yahoo.com/most-active?offset=1&count=100
+https://finance.yahoo.com/most-active?offset=1&count=100
+

@@ -1,12 +1,12 @@
-﻿using Models;
+﻿using Common.Models;
 
 namespace Trader {
 	interface ITrade {
-		public void Login(Credentials crendials);
+		public void SharesiesLogin(Credentials crendials);
 
 		public User ReAuth(Session session);
 
-		public void FeedData(Session session);
+		public void FeedSharesiesInstrumentData(Session session);
 
 		public void GetInstruments(Session session);
 

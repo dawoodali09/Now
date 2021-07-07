@@ -1,8 +1,5 @@
-﻿using System;
-namespace Models
-{
-	public class Credentials
-	{
+﻿namespace Common.Models {
+	public class Credentials {
 		public string email { get; set; }
 		public string password { get; set; }
 		public string auth_token { get; set; }

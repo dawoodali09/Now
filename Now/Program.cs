@@ -1,32 +1,30 @@
-﻿using Trader ;
-using Models;
+﻿using Microsoft.Extensions.Configuration;
+using Common.Models;
+using Trader;
+using System.Diagnostics;
+using System;
+using System.IO;
 
-namespace Now {
-    class Program {
+namespace NowConsole {
+	class Program {
 
-        static void Main(string[] args) {
-            Trade trader = new Trade();
-            trader.Login(new Credentials() { email = "dawoodali@gmail.com", password = ".....!" });
-            trader.FeedData(trader.session);
-            //trader.FeedPriceHistory(trader.session);
+		static void Main(string[] args) {
 
-            ////Utility.CLoseWeekends();
-            //Trader ninja = new Trader();  
+			IConfiguration Configuration = new ConfigurationBuilder()
+			.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).AddEnvironmentVariables().AddCommandLine(args).Build();
+			var emailSection = Configuration.GetSection("Email");
+			var passwordSection = Configuration.GetSection("Password");
+			var DatamodeSection = Configuration.GetSection("DataMode");
 
-            ////foreach(var mkt in ninja.GetOpenMarkets())
-            ////{
-            ////    Console.WriteLine(mkt.Name + "is open");
-            ////}
-
-            //if (string.IsNullOrEmpty(ninja.session.credentials.auth_token)) {
-            //    string email = "myEmail@domain.com"; // should come from config.
-            //    string password = "@MyPassword";// should come from config.
-            //    ninja.Login(new Credentials() { email = email, password = password });
-            //}
-            ////ninja.EXP2(ninja.session);
-            ////ninja.FeedPriceHistory(ninja.session,2458);
-            //ninja.FeedData(ninja.session);
-
-        }
-    }
+			if(emailSection != null && passwordSection != null && DatamodeSection != null){
+				string email = emailSection.Value;
+				string password = passwordSection.Value;
+				string strDataMode = DatamodeSection.Value;
+				Enum.TryParse(strDataMode, out Common.Enums.DataMode mode);
+				Trader.Trader trader = new Trader.Trader(mode);
+				trader.SharesiesLogin(new Credentials() { email = email, password = password });
+				trader.FeedSharesiesInstrumentData(trader.session);
+			}
+		}
+	}
 }
