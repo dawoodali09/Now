@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Common.Models {
 	public class InstrumentDataResponse {
@@ -16,63 +17,38 @@ namespace Common.Models {
 		public string Micro { get; set; }
 	}
 
-	public class _1d {
+	public class comparisonValues
+	{
 		public string Value { get; set; }
 		public string Percent { get; set; }
 		public string Max { get; set; }
 		public string Min { get; set; }
 	}
 
-	public class _1w {
-		public string Value { get; set; }
-		public string Percent { get; set; }
-		public string Max { get; set; }
-		public string Min { get; set; }
-	}
+	
 
-	public class _1m {
-		public string Value { get; set; }
-		public string Percent { get; set; }
-		public string Max { get; set; }
-		public string Min { get; set; }
-	}
+	public class comparisonPrices {
 
-	public class _3m {
-		public string Value { get; set; }
-		public string Percent { get; set; }
-		public string Max { get; set; }
-		public string Min { get; set; }
-	}
+		[JsonProperty(PropertyName = "1d")]
+		public comparisonValues OneDay { get; set; }
 
-	public class _6m {
-		public string Value { get; set; }
-		public string Percent { get; set; }
-		public string Max { get; set; }
-		public string Min { get; set; }
-	}
+		[JsonProperty(PropertyName = "1w")]
+		public comparisonValues OneWeek { get; set; }
 
-	public class _1y {
-		public string Value { get; set; }
-		public string Percent { get; set; }
-		public string Max { get; set; }
-		public string Min { get; set; }
-	}
+		[JsonProperty(PropertyName = "1m")]
+		public comparisonValues OneMonth { get; set; }
 
-	public class _5y {
-		public string Value { get; set; }
-		public string Percent { get; set; }
-		public string Max { get; set; }
-		public string Min { get; set; }
-	}
+		[JsonProperty(PropertyName = "3m")]
+		public comparisonValues ThreeMonth { get; set; }
 
-	public class ComparisonPrices {
-		public _1d _1d { get; set; }
-		public _1w _1w { get; set; }
-		public _1m _1m { get; set; }
-		public _3m _3m { get; set; }
-		public _6m _6m { get; set; }
-		public _1y _1y { get; set; }
-		public _5y _5y { get; set; }
+		[JsonProperty(PropertyName = "6m")]
+		public comparisonValues SixMonth { get; set; }
+
+		[JsonProperty(PropertyName = "1y")]
+		public comparisonValues OneYear { get; set; }
+
+		[JsonProperty(PropertyName = "5y")]
+		public comparisonValues FiveYear { get; set; }
 	}
 
 	public class Instrument {
@@ -88,7 +64,7 @@ namespace Common.Models {
 		public string LogoIdentifier { get; set; }
 		public Logos Logos { get; set; }
 		public int RiskRating { get; set; }
-		public ComparisonPrices ComparisonPrices { get; set; }
+		public comparisonPrices ComparisonPrices { get; set; }
 		public string MarketPrice { get; set; }
 		public DateTime MarketLastCheck { get; set; }
 		public string TradingStatus { get; set; }

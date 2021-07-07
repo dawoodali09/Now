@@ -8,8 +8,8 @@ using System.Linq;
 
 namespace SQLDataAccess.DataMethods {
 	public static class Methods {
-		public static void AddUpdateInstrument(Common.Models.Instrument ins) {
-			SQLDataAccess.Models.NowDBContext con = new SQLDataAccess.Models.NowDBContext();
+		public static void AddUpdateInstrument(Common.Models.Instrument ins,string connection) {
+			SQLDataAccess.Models.NowDBContext con = new SQLDataAccess.Models.NowDBContext(connection);
 			if (con.Database.CanConnect()) {
 				//store the market
 				Market mkt = new Market();

@@ -12,11 +12,16 @@ namespace Trader {
 	public class Trader : ITrade {
 		Common.Enums.DataMode DataMode;
 		public Session session;
-
+		public string ConnectionString { get; set; }
 		public Trader(Common.Enums.DataMode mode) {
 			this.DataMode = mode;			
 		}
-		
+		public Trader(Common.Enums.DataMode mode, string DataConnection)
+		{
+			this.DataMode = mode;
+			this.ConnectionString = DataConnection;
+		}
+
 
 		public void SharesiesLogin(Credentials suppliedCredentials) {
 
@@ -60,7 +65,7 @@ namespace Trader {
 				HttpClient _httpClient = new HttpClient();
 				_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Session.credentials.auth_token);
 				string requestUri = "https://data.sharesies.nz/api/v1/instruments?Page=" + PageNumber.ToString().Trim() + "&PerPage=60&Sort=marketCap&PriceChangeTime=1y&Query=&InstrumentTypes=equity";
-				HttpResponseMessage httpResponse = _httpClient.GetAsync(requestUri).Result;
+                HttpResponseMessage httpResponse = _httpClient.GetAsync(requestUri).Result;
 				var res = httpResponse.Content.ReadAsStringAsync();
 				InstrumentDataResponse ird = new InstrumentDataResponse();
 				ird = JsonConvert.DeserializeObject<InstrumentDataResponse>(res.Result);
@@ -69,9 +74,9 @@ namespace Trader {
 				Console.WriteLine("Processing PAge " + PageNumber.ToString() + Environment.NewLine);
 				foreach (var ins in ird.Instruments) {
 					if (this.DataMode == Common.Enums.DataMode.MONGO) {
-						MongoAccess.MongoData.AddInstrumment(ins);
+						MongoAccess.MongoData.AddInstrumment(ins,this.ConnectionString);
 					} else if (this.DataMode == Common.Enums.DataMode.SQL) {
-						SQLDataAccess.DataMethods.Methods.AddUpdateInstrument(ins);
+						SQLDataAccess.DataMethods.Methods.AddUpdateInstrument(ins,this.ConnectionString);
 					} else {
 						//do nothing for now.
 					}
