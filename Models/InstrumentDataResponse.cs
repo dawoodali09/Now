@@ -65,7 +65,7 @@ namespace Common.Models {
 		public Logos Logos { get; set; }
 		public int RiskRating { get; set; }
 		public comparisonPrices ComparisonPrices { get; set; }
-		public string MarketPrice { get; set; }
+		public decimal MarketPrice { get; set; }
 		public DateTime MarketLastCheck { get; set; }
 		public string TradingStatus { get; set; }
 		public string ExchangeCountry { get; set; }

@@ -40,7 +40,7 @@ namespace SQLDataAccess.DataMethods {
 						KidsRecommended = ins.KidsRecommended,
 						MarketCap = ins.MarketCap,
 						MarketId = con.Markets.Where(s => s.Code == ins.Exchange).FirstOrDefault().Id,
-						MarketPrice = string.IsNullOrEmpty(ins.MarketPrice) ? 0.00M : decimal.Parse(ins.MarketPrice),
+						MarketPrice = ins.MarketPrice,// string.IsNullOrEmpty(ins.MarketPrice) ? 0.00M : decimal.Parse(ins.MarketPrice),
 						Name = ins.Name,
 						Peratio = string.IsNullOrEmpty(ins.PeRatio) ? 0.00M : decimal.Parse(ins.PeRatio),
 						RiskRating = ins.RiskRating,
@@ -62,7 +62,7 @@ namespace SQLDataAccess.DataMethods {
 					dbIns.KidsRecommended = ins.KidsRecommended;
 					dbIns.MarketCap = ins.MarketCap;
 					dbIns.MarketId = con.Markets.Where(s => s.Code == ins.Exchange).FirstOrDefault().Id;
-					dbIns.MarketPrice = string.IsNullOrEmpty(ins.MarketPrice) ? 0.00M : decimal.Parse(ins.MarketPrice);
+					dbIns.MarketPrice = ins.MarketPrice;// string.IsNullOrEmpty(ins.MarketPrice) ? 0.00M : decimal.Parse(ins.MarketPrice);
 					dbIns.Name = ins.Name;
 					dbIns.Peratio = string.IsNullOrEmpty(ins.PeRatio) ? 0.00M : decimal.Parse(ins.PeRatio);
 					dbIns.RiskRating = ins.RiskRating;
@@ -70,9 +70,9 @@ namespace SQLDataAccess.DataMethods {
 					dbIns.Symbol = ins.Symbol;
 
 					//add another historic data 
-					if (dbIns.UpdatedOn != ins.MarketLastCheck && !string.IsNullOrEmpty(ins.MarketPrice)) {
+					if (dbIns.UpdatedOn != ins.MarketLastCheck) {
 						NowDBContext newCon = new NowDBContext();
-						newCon.PriceHistories.Add(new PriceHistory() { InstrumentId = dbIns.Id, RecordedOn = ins.MarketLastCheck, Price = decimal.Parse(ins.MarketPrice) });
+						newCon.PriceHistories.Add(new PriceHistory() { InstrumentId = dbIns.Id, RecordedOn = ins.MarketLastCheck, Price = ins.MarketPrice });
 						newCon.SaveChanges();
 						newCon.Dispose();
 					}
