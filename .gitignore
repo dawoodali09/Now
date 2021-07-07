@@ -340,4 +340,6 @@ ASALocalRun/
 healthchecksdb
 
 #config files
+Now/appsettings.json
 appsettings.json
+*.json
