@@ -139,6 +139,17 @@ namespace Trader {
 			}
 		}
 
+		public void StoreCategories()
+        {
+			if(DataMode == Common.Enums.DataMode.MONGO)
+            {
+				MongoAccess.MongoData.AddUpdateCategories(this.ConnectionString);
+            }else if(DataMode == Common.Enums.DataMode.SQL)
+            {
+				//todo
+            }
+        }
+
 		public void EXP(Session session) {
 
 			HttpClient _httpClient = new HttpClient();

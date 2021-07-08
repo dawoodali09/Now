@@ -20,6 +20,7 @@ namespace NowConsole {
 
             if (emailSection != null && passwordSection != null && DatamodeSection != null)
             {
+               
                 string email = emailSection.Value;
                 string password = passwordSection.Value;
                 string strDataMode = DatamodeSection.Value;
@@ -27,8 +28,9 @@ namespace NowConsole {
                 Enum.TryParse(strDataMode, out Common.Enums.DataMode mode);
                 string connectionStr = mode == Common.Enums.DataMode.MONGO ? MongoConnection.Value : SQLConnection.Value;
                 Trader.Trader trader = new Trader.Trader(mode, connectionStr);
-                trader.SharesiesLogin(new Credentials() { email = email, password = password });
-                trader.FeedSharesiesInstrumentData(trader.session);
+                //trader.StoreCategories();
+                //trader.SharesiesLogin(new Credentials() { email = email, password = password });
+                //trader.FeedSharesiesInstrumentData(trader.session);
             }
 
             static IConfiguration GetConfiguration(string[] args)
