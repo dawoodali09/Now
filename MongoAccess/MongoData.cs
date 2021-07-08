@@ -21,7 +21,6 @@ namespace MongoAccess {
 		public static void AddUpdateCategories(string connection)
 		{
 			List<Models.Category> CategoryList = new List<Models.Category>();
-
 			MongoClient dbClient = new MongoClient(connection);
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<Instrument>("Instruments");
@@ -35,11 +34,9 @@ namespace MongoAccess {
                     {
 						CategoryList.Add( new Models.Category() { Id = ind, Name=cat });
 						ind++;
-                    }
-					 
+                    } 
 				}
 			}
-
  
 			var collection2 = database.GetCollection<BsonDocument>("Categories");
 			foreach(var cat in CategoryList)
@@ -50,8 +47,6 @@ namespace MongoAccess {
 				BsonDocument doc = cat.ToBsonDocument();
 				collection2.InsertOne(doc);
 			}
-			 
-			
 		}
 	}
 }
