@@ -48,8 +48,9 @@ namespace SQLDataAccess.DataMethods {
 						Symbol = ins.Symbol,
 						UpdatedOn = ins.MarketLastCheck,
 						WebsiteUrl = ins.WebsiteUrl
-					};
+					};					
 					mkt.IsOpen = (ins.TradingStatus == "active");
+					SetComparativePrices(ref dbIns, ins);
 					con.Instruments.Add(dbIns);
 				} else {
 					dbIns = con.Instruments.FirstOrDefault(x => x.Shid == Guid.Parse(ins.Id));
@@ -78,12 +79,175 @@ namespace SQLDataAccess.DataMethods {
 					}
 					dbIns.UpdatedOn = ins.MarketLastCheck;
 					dbIns.WebsiteUrl = ins.WebsiteUrl;
+
+					SetComparativePrices(ref dbIns, ins);
 				}
+
+				
 				con.SaveChanges();
 				con.Dispose();
 			}
 		}
 
+		static void SetComparativePrices(ref SQLDataAccess.Models.Instrument dbins, Common.Models.Instrument ins){
+			if(ins.ComparisonPrices != null){
+				decimal unParsedValue = 0;
+				if (ins.ComparisonPrices.OneDay != null) {
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneDay.Value, out unParsedValue)) {
+						dbins.OneDayValue = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneDay.Percent, out unParsedValue)) {
+						dbins.OneDayPercentage = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneDay.Min, out unParsedValue)) {
+						dbins.OneDayMinimum = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneDay.Max, out unParsedValue)) {
+						dbins.OneDayMaximum = unParsedValue;
+						unParsedValue = 0;
+					}
+				}
+
+				if (ins.ComparisonPrices.OneWeek != null) {
+					if (decimal.TryParse(ins.ComparisonPrices.OneWeek.Value, out unParsedValue)) {
+						dbins.OneWeekValue = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneWeek.Percent, out unParsedValue)) {
+						dbins.OneWeekPercentage = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneWeek.Min, out unParsedValue)) {
+						dbins.OneWeekMinimum = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneWeek.Max, out unParsedValue)) {
+						dbins.OneWeekMaximum = unParsedValue;
+						unParsedValue = 0;
+					}
+				}
+
+				if (ins.ComparisonPrices.OneMonth != null) {
+					if (decimal.TryParse(ins.ComparisonPrices.OneMonth.Value, out unParsedValue)) {
+						dbins.OneMonthValue = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneMonth.Percent, out unParsedValue)) {
+						dbins.OneMonthPercentage = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneMonth.Min, out unParsedValue)) {
+						dbins.OneMonthMinimum = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneMonth.Max, out unParsedValue)) {
+						dbins.OneMonthMaximum = unParsedValue;
+						unParsedValue = 0;
+					}
+				}
+
+				if (ins.ComparisonPrices.ThreeMonth != null) {
+					if (decimal.TryParse(ins.ComparisonPrices.ThreeMonth.Value, out unParsedValue)) {
+						dbins.ThreeMonthValue = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.ThreeMonth.Percent, out unParsedValue)) {
+						dbins.ThreeMonthPercentage = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.ThreeMonth.Min, out unParsedValue)) {
+						dbins.ThreeMonthMinimum = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.ThreeMonth.Max, out unParsedValue)) {
+						dbins.ThreeMonthMaximum = unParsedValue;
+						unParsedValue = 0;
+					}
+				}
+
+				if (ins.ComparisonPrices.SixMonth != null) {
+					if (decimal.TryParse(ins.ComparisonPrices.SixMonth.Value, out unParsedValue)) {
+						dbins.SixMonthValue = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.SixMonth.Percent, out unParsedValue)) {
+						dbins.SixMonthPercentage = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.SixMonth.Min, out unParsedValue)) {
+						dbins.SixMonthMinimum = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.SixMonth.Max, out unParsedValue)) {
+						dbins.SixMonthMaximum = unParsedValue;
+						unParsedValue = 0;
+					}
+				}
+
+				if (ins.ComparisonPrices.OneYear != null) {
+					if (decimal.TryParse(ins.ComparisonPrices.OneYear.Value, out unParsedValue)) {
+						dbins.OneYearValue = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneYear.Percent, out unParsedValue)) {
+						dbins.OneYearPercentage = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneYear.Min, out unParsedValue)) {
+						dbins.OneYearMinimum = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.OneYear.Max, out unParsedValue)) {
+						dbins.OneYearMaximum = unParsedValue;
+						unParsedValue = 0;
+					}
+				}
+
+				if (ins.ComparisonPrices.FiveYear != null) {
+					if (decimal.TryParse(ins.ComparisonPrices.FiveYear.Value, out unParsedValue)) {
+						dbins.FiveYearValue = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.FiveYear.Percent, out unParsedValue)) {
+						dbins.FiveYearPercentage = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.FiveYear.Min, out unParsedValue)) {
+						dbins.FiveYearMinimum = unParsedValue;
+						unParsedValue = 0;
+					}
+
+					if (decimal.TryParse(ins.ComparisonPrices.FiveYear.Max, out unParsedValue)) {
+						dbins.FiveYearMaximum = unParsedValue;
+						unParsedValue = 0;
+					}
+				}
+			}
+		}
 		public static List<Market> GetOpenMarkets() {
 			List<Market> OpenMarkets = new List<Market>();
 			NowDBContext con = new NowDBContext();
