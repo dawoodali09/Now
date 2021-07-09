@@ -72,7 +72,7 @@ namespace SQLDataAccess.DataMethods {
 
 					//add another historic data 
 					if (dbIns.UpdatedOn != ins.MarketLastCheck) {
-						NowDBContext newCon = new NowDBContext();
+						NowDBContext newCon = new NowDBContext(connection);
 						newCon.PriceHistories.Add(new PriceHistory() { InstrumentId = dbIns.Id, RecordedOn = ins.MarketLastCheck, Price = ins.MarketPrice });
 						newCon.SaveChanges();
 						newCon.Dispose();
@@ -87,6 +87,51 @@ namespace SQLDataAccess.DataMethods {
 				con.SaveChanges();
 				con.Dispose();
 			}
+		}
+
+		public static void AddUpdateCategories(string connection) {
+			SQLDataAccess.Models.NowDBContext con = new SQLDataAccess.Models.NowDBContext(connection);
+			List<string> rawcatergoryList = con.Instruments.Where(v => !string.IsNullOrEmpty(v.Categories)).Select(s => s.Categories).Distinct().ToList();
+
+			List<string> refinedCategories = new List<string>();
+			foreach (var cat in rawcatergoryList) {
+				foreach (var st in cat.Split(',')) {
+					if (!refinedCategories.Contains(st)) {
+						refinedCategories.Add(st);
+					}
+				}
+			}
+
+			foreach(var rc in refinedCategories){
+				if(!con.Categories.Any(s=> s.Name == rc)){
+					con.Categories.Add(new Category() {  Name = rc });
+				}
+			}
+
+			con.SaveChanges();
+
+			List<Category> DBCatList = con.Categories.ToList();
+
+			List<Tuple<int, List<string>>> comcol = new List<Tuple<int, List<string>>>();
+			var dataset = con.Instruments.Where(s => !string.IsNullOrEmpty(s.Categories)).Select(x => new 
+			{ x.Id, x.Categories  }).ToList();
+
+
+			foreach(var ds in dataset){				
+				Tuple<int, List<string>> instruCats = new Tuple<int, List<string>>(ds.Id, ds.Categories.Split(',').ToList());
+				comcol.Add(instruCats);
+			}
+			
+			foreach(var cc in comcol){
+				foreach(var it in cc.Item2.ToList()){
+					InstrumentCategory ic = new InstrumentCategory() { InstrumentId  = cc.Item1 , CategoryId = DBCatList.Where(s=> s.Name == it).FirstOrDefault().Id };
+					if(!con.InstrumentCategories.Where(s=> s.InstrumentId == ic.InstrumentId && s.CategoryId == ic.CategoryId).Any()){
+						con.InstrumentCategories.Add(ic);
+						con.SaveChanges();
+					}
+				}
+			}
+
 		}
 
 		static void SetComparativePrices(ref SQLDataAccess.Models.Instrument dbins, Common.Models.Instrument ins){
@@ -248,9 +293,9 @@ namespace SQLDataAccess.DataMethods {
 				}
 			}
 		}
-		public static List<Market> GetOpenMarkets() {
+		public static  List<Market> GetOpenMarkets(string connection) {
 			List<Market> OpenMarkets = new List<Market>();
-			NowDBContext con = new NowDBContext();
+			NowDBContext con = new NowDBContext(connection);
 			TimeSpan currentNZTime = DateTime.Now.TimeOfDay;
 			DateTime today = DateTime.Now;
 			OpenMarkets = con.Markets.Where(s => s.OpeningTimeNz < currentNZTime && s.ClosingTimeNz > currentNZTime && !s.ClosingDays.Any(c => c.ClosingDate.Date == today.Date)).ToList();

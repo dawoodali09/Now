@@ -8,33 +8,33 @@ namespace SQLDataAccess.Models
 {
     public partial class NowDBContext : DbContext
     {
-        public NowDBContext()
-        {
-        }
+		public NowDBContext() {
+		}
 
-        public NowDBContext(DbContextOptions<NowDBContext> options)
+		public NowDBContext(DbContextOptions<NowDBContext> options)
             : base(options)
         {
         }
 
+        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<ClosingDay> ClosingDays { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Instrument> Instruments { get; set; }
+        public virtual DbSet<InstrumentCategory> InstrumentCategories { get; set; }
         public virtual DbSet<Market> Markets { get; set; }
         public virtual DbSet<PriceHistory> PriceHistories { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=Dawood-PC;Database=NowDB;Trusted_Connection=True;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(400)
+                    .HasDefaultValueSql("('')");
+            });
 
             modelBuilder.Entity<ClosingDay>(entity =>
             {
@@ -173,6 +173,21 @@ namespace SQLDataAccess.Models
                     .HasForeignKey(d => d.MarketId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Instrumen__Marke__5070F446");
+            });
+
+            modelBuilder.Entity<InstrumentCategory>(entity =>
+            {
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.InstrumentCategories)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Instrumen__Categ__531856C7");
+
+                entity.HasOne(d => d.Instrument)
+                    .WithMany(p => p.InstrumentCategories)
+                    .HasForeignKey(d => d.InstrumentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Instrumen__Instr__5224328E");
             });
 
             modelBuilder.Entity<Market>(entity =>

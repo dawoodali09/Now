@@ -9,6 +9,7 @@ namespace SQLDataAccess.Models
     {
         public Instrument()
         {
+            InstrumentCategories = new HashSet<InstrumentCategory>();
             PriceHistories = new HashSet<PriceHistory>();
         }
 
@@ -62,6 +63,7 @@ namespace SQLDataAccess.Models
         public decimal OneDayMaximum { get; set; }
 
         public virtual Market Market { get; set; }
+        public virtual ICollection<InstrumentCategory> InstrumentCategories { get; set; }
         public virtual ICollection<PriceHistory> PriceHistories { get; set; }
     }
 }

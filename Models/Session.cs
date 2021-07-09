@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System;
 
 namespace Common.Models {
 
@@ -12,6 +13,7 @@ namespace Common.Models {
 		public static Session GetInstance() {
 			if (_instance == null) {
 				_instance = new Session();
+				Expiry = DateTime.MinValue;
 			}
 			return _instance;
 		}
@@ -24,6 +26,11 @@ namespace Common.Models {
 
 		public static User account { get; set; }
 		public static NameValueCollection headers { get; set; }
-		public static Credentials credentials { get; set; }
+		public static Credentials credentials { get; set; }				
+		public static DateTime Expiry { get; set; }
+
+		public static Boolean IsExpired(){
+			return (DateTime.Now > Expiry);
+		}
 	}
 }

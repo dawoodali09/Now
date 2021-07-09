@@ -13,15 +13,15 @@ namespace Analyst {
 		public override int GetDecisionPoints(int stockId) {
 			DecisionPoints = 0;
 
-			Instrument ins = new Instrument();
-			NowDBContext con = new NowDBContext();
-			if (!con.Instruments.Any(s => s.Id == stockId))
-				return -1;
-			else
-				ins = con.Instruments.Where(s => s.Id == stockId).FirstOrDefault();
+			//Instrument ins = new Instrument();
+			//NowDBContext con = new NowDBContext();
+			//if (!con.Instruments.Any(s => s.Id == stockId))
+			//	return -1;
+			//else
+			//	ins = con.Instruments.Where(s => s.Id == stockId).FirstOrDefault();
 
 
-			DecisionPoints += ins.Peratio.HasValue ? PERationRule(ins.Peratio.Value) : PERationRule(0);
+			//DecisionPoints += ins.Peratio.HasValue ? PERationRule(ins.Peratio.Value) : PERationRule(0);
 
 			return DecisionPoints;
 		}

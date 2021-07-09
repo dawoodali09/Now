@@ -63,6 +63,8 @@
     <Build Include="Instruments.sql" />
     <Build Include="PriceHistory.sql" />
     <Build Include="ClosingDays.sql" />
+    <Build Include="Categories.sql" />
+    <Build Include="InstrumentCategories.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NowDB.publish.xml" />

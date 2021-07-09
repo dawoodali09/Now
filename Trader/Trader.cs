@@ -25,8 +25,7 @@ namespace Trader {
 
 		public void SharesiesLogin(Credentials suppliedCredentials) {
 
-			string loginPostRequest = "{\"email\":\"" + suppliedCredentials.email + "\",\"password\":\"" + suppliedCredentials.password + "\",\"remember\":false}";
-
+			string loginPostRequest = "{\"email\":\"" + suppliedCredentials.email + "\",\"password\":\"" + suppliedCredentials.password + "\",\"remember\":false}";			
 			HttpWebResponse response = Utility.Methods.PostData("https://app.sharesies.com/api/identity/login", loginPostRequest);
 			var responseBytes = Utility.Methods.StreamToByteArray(response.GetResponseStream());
 			var decodedData = Utility.Methods.ExtractGZipData(responseBytes);
@@ -50,6 +49,7 @@ namespace Trader {
 				collection.Add(hk.ToString(), response.Headers[hk.ToString()]);
 			}
 			Session.SetSession(loginResponseObject.User, collection, suppliedCredentials);
+			Session.Expiry = DateTime.Now.AddMinutes(5);
 		}
 
 		public void FeedSharesiesInstrumentData(Session session) {
@@ -62,6 +62,11 @@ namespace Trader {
 
 			while (allPagesDone == false) {
 				PageNumber++;
+
+				if (Session.IsExpired()) {
+					this.SharesiesLogin(Session.credentials);
+				}
+
 				HttpClient _httpClient = new HttpClient();
 				_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Session.credentials.auth_token);
 				string requestUri = "https://data.sharesies.nz/api/v1/instruments?Page=" + PageNumber.ToString().Trim() + "&PerPage=60&Sort=marketCap&PriceChangeTime=1y&Query=&InstrumentTypes=equity";
@@ -74,7 +79,7 @@ namespace Trader {
 				Console.WriteLine("Processing PAge " + PageNumber.ToString() + Environment.NewLine);
 				foreach (var ins in ird.Instruments) {
 					if (this.DataMode == Common.Enums.DataMode.MONGO) {
-						MongoAccess.MongoData.AddInstrumment(ins,this.ConnectionString);
+						MongoAccess.DataMethods.Methods.AddInstrumment(ins,this.ConnectionString);
 					} else if (this.DataMode == Common.Enums.DataMode.SQL) {
 						SQLDataAccess.DataMethods.Methods.AddUpdateInstrument(ins,this.ConnectionString);
 					} else {
@@ -89,10 +94,50 @@ namespace Trader {
 			// this function will make a call to sharesied and load import all the missing data into database 
 			// if data is already present it will update the data that needed to be updated
 			// it will also add data that needed for history.
-			if (this.DataMode == Common.Enums.DataMode.SQL) {
-				SQLDataAccess.Models.NowDBContext con = new SQLDataAccess.Models.NowDBContext();
+			if (this.DataMode == Common.Enums.DataMode.MONGO) {
+				List<Common.Models.Instrument> Instruments = MongoAccess.DataMethods.Methods.ListInstruments(this.ConnectionString);
+
+				foreach (var sh in Instruments.ToList()) {
+					if (Session.IsExpired()) {
+						this.SharesiesLogin(Session.credentials);
+					}
+
+					HttpClient _httpClient = new HttpClient();
+					_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Session.credentials.auth_token);
+					string requestUri = "https://data.sharesies.nz/api/v1/instruments/" + sh.Id.ToString() + "/pricehistory";
+					HttpResponseMessage httpResponse = _httpClient.GetAsync(requestUri).Result;
+					var res = httpResponse.Content.ReadAsStringAsync();
+
+					if (res.IsCompleted) {
+
+						var response = res.Result;
+						if (response.Contains("Auth expired")) {
+							throw new Exception("Why session expirty isn't working ?");
+							return;
+						}
+						var JobjectResponse = Newtonsoft.Json.Linq.JObject.Parse(response);
+						var pHistory = JobjectResponse["dayPrices"];
+						foreach (var his in pHistory) {
+
+							string str = his.ToString().Replace("\\", string.Empty);
+							str = his.ToString().Replace("\"", string.Empty);
+							str = str.Trim();
+							DateTime dt = DateTime.Parse(str.Split(':')[0].Trim());
+							decimal mon = decimal.Parse(str.Split(':')[1].Trim());
+							MongoAccess.DataMethods.Methods.AddPriceHistory(sh, mon, dt, this.ConnectionString);
+							Console.WriteLine(" " + sh.Name + " Done;");
+						}
+					}
+				}
+			} else if (this.DataMode == Common.Enums.DataMode.SQL) {
+				SQLDataAccess.Models.NowDBContext con = new SQLDataAccess.Models.NowDBContext(this.ConnectionString);
 				foreach (var sh in con.Instruments.Where(s => s.Id > LastRecordedId).ToList()) {
 					List<PriceHistory> historyList = new List<PriceHistory>();
+
+					if (Session.IsExpired()) {
+						this.SharesiesLogin(Session.credentials);
+					}
+
 					HttpClient _httpClient = new HttpClient();
 					_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Session.credentials.auth_token);
 					string requestUri = "https://data.sharesies.nz/api/v1/instruments/" + sh.Shid.ToString() + "/pricehistory";
@@ -102,15 +147,7 @@ namespace Trader {
 					if (res.IsCompleted) {
 						var response = res.Result;
 						if (response.Contains("Auth expired")) {
-
-							Trader ninja = new Trader(this.DataMode);
-							if (string.IsNullOrEmpty(Session.credentials.auth_token)) {
-								string email = "xxx@gmail.com"; // should come from config.
-								string password = "xxxx!";// should come from config.
-								ninja.SharesiesLogin(new Credentials() { email = email, password = password });
-								this.session = ninja.session;
-							}
-							FeedPriceHistory(ninja.session, sh.Id - 1);
+							throw new Exception("Why session expirty isn't working ?");
 							return;
 						}
 						var JobjectResponse = Newtonsoft.Json.Linq.JObject.Parse(response);
@@ -126,7 +163,7 @@ namespace Trader {
 							PriceHistory dph = new PriceHistory() { InstrumentId = sh.Id, Price = mon, RecordedOn = dt };
 							historyList.Add(dph);
 						}
-						NowDBContext newCon = new NowDBContext();
+						NowDBContext newCon = new NowDBContext(this.ConnectionString);
 						newCon.PriceHistories.AddRange(historyList.AsEnumerable());
 						newCon.SaveChanges();
 						newCon.Dispose();
@@ -134,21 +171,18 @@ namespace Trader {
 					}
 				}
 			}
-			else if(this.DataMode == Common.Enums.DataMode.MONGO){
-				// this needed to be implemented.
-			}
 		}
 
 		public void StoreCategories()
         {
 			if(DataMode == Common.Enums.DataMode.MONGO)
             {
-				MongoAccess.MongoData.AddUpdateCategories(this.ConnectionString);
+				MongoAccess.DataMethods.Methods.AddUpdateCategories(this.ConnectionString);
             }else if(DataMode == Common.Enums.DataMode.SQL)
             {
-				//todo
-            }
-        }
+				SQLDataAccess.DataMethods.Methods.AddUpdateCategories(this.ConnectionString);
+			}
+		}
 
 		public void EXP(Session session) {
 
