@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NowConsole", "Now\NowConsol
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLDataAccess", "DataAccess\SQLDataAccess.csproj", "{3B68DB3D-24CF-4F4E-9924-8FACA2222641}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "NowDB", "NowDB\NowDB.sqlproj", "{59A6EB4F-CA40-4E85-9076-357B613EF21A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trader", "Trader\Trader.csproj", "{FFF86DF2-FF6C-43CC-8DEF-A881E00D9CEF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "Utility\Utility.csproj", "{2A45FB03-54D3-4B17-87C8-41C022567314}"
@@ -18,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoAccess", "MongoAccess\MongoAccess.csproj", "{D00626D4-9DC7-458D-A9A3-84184BB34B63}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{CE23B7F6-2AA6-4D0C-9B13-03D1BA9C00DB}"
+EndProject
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "NowDB", "NowDB\NowDB.sqlproj", "{46DFA9D4-79AA-44A7-BEA8-495A3F097F92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,12 +33,6 @@ Global
 		{3B68DB3D-24CF-4F4E-9924-8FACA2222641}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B68DB3D-24CF-4F4E-9924-8FACA2222641}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B68DB3D-24CF-4F4E-9924-8FACA2222641}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59A6EB4F-CA40-4E85-9076-357B613EF21A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59A6EB4F-CA40-4E85-9076-357B613EF21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59A6EB4F-CA40-4E85-9076-357B613EF21A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{59A6EB4F-CA40-4E85-9076-357B613EF21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59A6EB4F-CA40-4E85-9076-357B613EF21A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59A6EB4F-CA40-4E85-9076-357B613EF21A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{FFF86DF2-FF6C-43CC-8DEF-A881E00D9CEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FFF86DF2-FF6C-43CC-8DEF-A881E00D9CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFF86DF2-FF6C-43CC-8DEF-A881E00D9CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
