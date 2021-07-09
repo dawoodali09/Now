@@ -82,6 +82,12 @@ namespace Common.Models {
 		public string GrossDividendYieldPercent { get; set; }
 		public string AnnualisedReturnPercent { get; set; }
 		public string Ceo { get; set; }
-		public int Employees { get; set; }
+		public int Employees { get; set; }		
 	}
+
+	public class Combo
+    {
+		public Instrument instruent { get; set; }
+		public SharePriceHistory sph { get; set; }
+    }
 }

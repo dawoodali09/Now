@@ -90,6 +90,15 @@ namespace Trader {
 			}
 		}
 
+		public void GetNZXShares()
+        {
+			var res = MongoAccess.DataMethods.Methods.ListInstruments("NZX", this.ConnectionString);
+			foreach(var s in res.ToList())
+            {
+				//var sph = MongoAccess.DataMethods.Methods.ListStockPriceHistory(s.Id, this.ConnectionString);
+            }
+        }
+
 		//its a very long running method usually it fetches 5 years data for each stock.
 		public void FeedPriceHistory(Session session, int LastRecordedId = 0) {
 			// this function will make a call to sharesied and load import all the missing data into database 

@@ -60,17 +60,71 @@ namespace MongoAccess.DataMethods {
 
 
 		public static List<Instrument> ListInstruments(string connection) {
-			List<Instrument> result = new List<Instrument>();
-			List<Models.Category> CategoryList = new List<Models.Category>();
+			List<Instrument> result = new List<Instrument>();			
 			MongoClient dbClient = new MongoClient(connection);			
 			var database = dbClient.GetDatabase("MarketData");
-
 			var collection = database.GetCollection<Instrument>("Instruments");
 			var queryable = collection.AsQueryable();
 			foreach (var ins in queryable.ToList()){
 				result.Add(ins);
 			}
 			return result;
+		}
+
+		public static List<Combo> ListInstruments(string market, string connection)
+		{
+			List<Instrument> result = new List<Instrument>();			
+			MongoClient dbClient = new MongoClient(connection);
+			var database = dbClient.GetDatabase("MarketData");
+			var collection = database.GetCollection<Instrument>("Instruments");
+			var builder = Builders<Instrument>.Filter;
+			var filter = builder.Eq("Exchange", market);
+			result = collection.Find(filter).ToList();
+
+			List<Combo> comboList = new List<Combo>();
+			foreach (var ins in result)
+            {
+				var sph = ListStockPriceHistory(ins.Id, connection);
+				Combo cmb = new Combo()
+				{
+					instruent = ins,
+					sph = sph
+				};
+				comboList.Add(cmb);
+
+			}
+			return comboList;
+			
+		}
+
+		public static Common.Models.SharePriceHistory ListStockPriceHistory(string stockId, string connection)
+		{
+            Common.Models.SharePriceHistory result = new SharePriceHistory();
+            MongoClient dbClient = new MongoClient(connection);
+			var database = dbClient.GetDatabase("MarketData");
+			var collection = database.GetCollection<Common.Models.SharePriceHistory>("PriceHistory");
+			var builder = Builders<Common.Models.SharePriceHistory>.Filter;
+			var filter = builder.Eq("Id", stockId);
+			result = collection.Find(filter).FirstOrDefault();
+			var test = collection.Find(filter).ToList();
+			
+			return result;
+		}
+
+		private static IMongoDatabase GetDatabase(string connection)
+		{
+			MongoClient mongoClient = new MongoClient(connection);
+			return mongoClient.GetDatabase("MarketData");
+}
+
+		public static IMongoCollection<BsonDocument> GetCollection(string collection, string connection)
+		{
+			return GetDatabase(connection).GetCollection<BsonDocument>(collection);
+		}
+
+		public static IMongoCollection<TDocument> GetCollection<TDocument>(string collection, string con)
+		{
+			return GetDatabase(con).GetCollection<TDocument>(collection);
 		}
 	}
 }
