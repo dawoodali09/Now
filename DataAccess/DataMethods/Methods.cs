@@ -4,7 +4,7 @@ using System.Text;
 using SQLDataAccess.Models;
 using System;
 using System.Linq;
-
+using PriceHistory = SQLDataAccess.Models.PriceHistory;
 
 namespace SQLDataAccess.DataMethods {
 	public static class Methods {

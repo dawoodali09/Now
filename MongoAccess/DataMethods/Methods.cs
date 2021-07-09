@@ -20,15 +20,14 @@ namespace MongoAccess.DataMethods {
 			collection.InsertOne(doc);
 		}
 
-		public static void AddPriceHistory(Instrument ins, decimal price, DateTime RecordedOn, string connection) {			
+		public static void AddPriceHistory(Common.Models.SharePriceHistory sph, string connection) {			
 			MongoClient dbClient = new MongoClient(connection);
 			var dbList = dbClient.ListDatabases().ToList();
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<BsonDocument>("PriceHistory");
-			//var deleteFilter = Builders<BsonDocument>.Filter.Eq("Id", ins.Id);
-			//collection.FindOneAndDelete(deleteFilter);
-			Models.PriceHistory ph = new Models.PriceHistory() { Id = ins.Id, Price = price, RecordedOn = RecordedOn  };
-			BsonDocument doc = ph.ToBsonDocument();
+			var deleteFilter = Builders<BsonDocument>.Filter.Eq("Id", sph.Id);
+			collection.FindOneAndDelete(deleteFilter);
+			BsonDocument doc = sph.ToBsonDocument();
 			collection.InsertOne(doc);
 		}
 
@@ -71,8 +70,6 @@ namespace MongoAccess.DataMethods {
 			foreach (var ins in queryable.ToList()){
 				result.Add(ins);
 			}
-
-	
 			return result;
 		}
 	}

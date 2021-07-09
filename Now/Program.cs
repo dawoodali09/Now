@@ -8,11 +8,11 @@ using System.IO;
 namespace NowConsole {
 	class Program {
         const string LocalWindowsConfigLocation = "C:\\temp\\Now\\appsettings.json";
-        const string LocalMACConfigLocation = "C:\\temp\\Now\\appsettings.json"; //???
+        const string LocalMACConfigLocation = "/Users/dawoodali/temp/Now/appsettings.json"; 
 
         static void Main(string[] args)
         {
-            IConfiguration Configuration = GetConfiguration(args, Common.Enums.Machine.WINDOWS);
+            IConfiguration Configuration = GetConfiguration(args, Common.Enums.Machine.MAC);
             var emailSection = Configuration.GetSection("Email");
             var passwordSection = Configuration.GetSection("Password");
             var DatamodeSection = Configuration.GetSection("DataMode");

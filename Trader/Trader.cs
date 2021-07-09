@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using PriceHistory = SQLDataAccess.Models.PriceHistory;
 
 namespace Trader {
 	public class Trader : ITrade {
@@ -113,26 +114,28 @@ namespace Trader {
 						var response = res.Result;
 						if (response.Contains("Auth expired")) {
 							throw new Exception("Why session expirty isn't working ?");
-							return;
 						}
 						var JobjectResponse = Newtonsoft.Json.Linq.JObject.Parse(response);
 						var pHistory = JobjectResponse["dayPrices"];
+						Common.Models.SharePriceHistory sph = new SharePriceHistory() { Id = sh.Id, History = new List<Common.Models.PriceHistory>() };
+						
 						foreach (var his in pHistory) {
-
 							string str = his.ToString().Replace("\\", string.Empty);
 							str = his.ToString().Replace("\"", string.Empty);
 							str = str.Trim();
 							DateTime dt = DateTime.Parse(str.Split(':')[0].Trim());
 							decimal mon = decimal.Parse(str.Split(':')[1].Trim());
-							MongoAccess.DataMethods.Methods.AddPriceHistory(sh, mon, dt, this.ConnectionString);
-							Console.WriteLine(" " + sh.Name + " Done;");
+							sph.History.Add(new Common.Models.PriceHistory() { Price = mon, RecordedOn = dt });
 						}
+
+						MongoAccess.DataMethods.Methods.AddPriceHistory(sph, this.ConnectionString);
+						Console.WriteLine(sh.Name + " Done");
 					}
 				}
 			} else if (this.DataMode == Common.Enums.DataMode.SQL) {
 				SQLDataAccess.Models.NowDBContext con = new SQLDataAccess.Models.NowDBContext(this.ConnectionString);
 				foreach (var sh in con.Instruments.Where(s => s.Id > LastRecordedId).ToList()) {
-					List<PriceHistory> historyList = new List<PriceHistory>();
+					List<SQLDataAccess.Models.PriceHistory> historyList = new List<SQLDataAccess.Models.PriceHistory>();
 
 					if (Session.IsExpired()) {
 						this.SharesiesLogin(Session.credentials);
@@ -148,7 +151,6 @@ namespace Trader {
 						var response = res.Result;
 						if (response.Contains("Auth expired")) {
 							throw new Exception("Why session expirty isn't working ?");
-							return;
 						}
 						var JobjectResponse = Newtonsoft.Json.Linq.JObject.Parse(response);
 						var pHistory = JobjectResponse["dayPrices"];
