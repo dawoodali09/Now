@@ -87,7 +87,7 @@ namespace Common.Models {
 
 	public class Combo
     {
-		public Instrument instruent { get; set; }
-		public SharePriceHistory sph { get; set; }
+		public Instrument instrument { get; set; }
+		public StockPriceHistory sph { get; set; }
     }
 }

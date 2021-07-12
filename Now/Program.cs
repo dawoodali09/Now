@@ -30,10 +30,10 @@ namespace NowConsole {
                 Enum.TryParse(strDataMode, out Common.Enums.DataMode mode);
                 string connectionStr = mode == Common.Enums.DataMode.MONGO ? MongoConnection.Value : SQLConnection.Value;
                 Trader.Trader trader = new Trader.Trader(mode, connectionStr);
-                trader.GetNZXShares();
+                //trader.GetNZXShares();
                 //trader.StoreCategories(); // call this method only once in a blue moon
-                //trader.SharesiesLogin(new Credentials() { email = email, password = password });               
-                //trader.FeedSharesiesInstrumentData(trader.session);
+                trader.SharesiesLogin(new Credentials() { email = email, password = password });               
+                trader.FeedSharesiesInstrumentData(trader.session);
                 //trader.FeedPriceHistory(trader.session);
 
             }

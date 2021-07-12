@@ -11,12 +11,16 @@ using PriceHistory = SQLDataAccess.Models.PriceHistory;
 
 namespace Trader {
 	public class Trader : ITrade {
+
 		Common.Enums.DataMode DataMode;
 		public Session session;
+
 		public string ConnectionString { get; set; }
+
 		public Trader(Common.Enums.DataMode mode) {
 			this.DataMode = mode;			
 		}
+
 		public Trader(Common.Enums.DataMode mode, string DataConnection)
 		{
 			this.DataMode = mode;
@@ -24,7 +28,8 @@ namespace Trader {
 		}
 
 
-		public void SharesiesLogin(Credentials suppliedCredentials) {
+        public void SharesiesLogin(Credentials suppliedCredentials)
+        {
 
 			string loginPostRequest = "{\"email\":\"" + suppliedCredentials.email + "\",\"password\":\"" + suppliedCredentials.password + "\",\"remember\":false}";			
 			HttpWebResponse response = Utility.Methods.PostData("https://app.sharesies.com/api/identity/login", loginPostRequest);
@@ -80,7 +85,8 @@ namespace Trader {
 				Console.WriteLine("Processing PAge " + PageNumber.ToString() + Environment.NewLine);
 				foreach (var ins in ird.Instruments) {
 					if (this.DataMode == Common.Enums.DataMode.MONGO) {
-						MongoAccess.DataMethods.Methods.AddInstrumment(ins,this.ConnectionString);
+						MongoAccess.DataMethods.Methods.AddUpdateInstrumment(ins,this.ConnectionString);
+						Console.WriteLine(ins.Name  + " Done" );
 					} else if (this.DataMode == Common.Enums.DataMode.SQL) {
 						SQLDataAccess.DataMethods.Methods.AddUpdateInstrument(ins,this.ConnectionString);
 					} else {
@@ -92,8 +98,7 @@ namespace Trader {
 
 		public void GetNZXShares()
         {
-			var res = MongoAccess.DataMethods.Methods.ListInstruments("NZX", this.ConnectionString);
-			foreach(var s in res.ToList())
+            foreach (var s in MongoAccess.DataMethods.Methods.ListInstruments("NZX", this.ConnectionString).ToList())
             {
 				//var sph = MongoAccess.DataMethods.Methods.ListStockPriceHistory(s.Id, this.ConnectionString);
             }
@@ -126,7 +131,7 @@ namespace Trader {
 						}
 						var JobjectResponse = Newtonsoft.Json.Linq.JObject.Parse(response);
 						var pHistory = JobjectResponse["dayPrices"];
-						Common.Models.SharePriceHistory sph = new SharePriceHistory() { Id = sh.Id, History = new List<Common.Models.PriceHistory>() };
+						Common.Models.StockPriceHistory sph = new StockPriceHistory() { Id = sh.Id, History = new List<Common.Models.PriceHistory>() };
 						
 						foreach (var his in pHistory) {
 							string str = his.ToString().Replace("\\", string.Empty);
@@ -137,7 +142,7 @@ namespace Trader {
 							sph.History.Add(new Common.Models.PriceHistory() { Price = mon, RecordedOn = dt });
 						}
 
-						MongoAccess.DataMethods.Methods.AddPriceHistory(sph, this.ConnectionString);
+						MongoAccess.DataMethods.Methods.AddUpdatePriceHistory(sph, this.ConnectionString);
 						Console.WriteLine(sh.Name + " Done");
 					}
 				}

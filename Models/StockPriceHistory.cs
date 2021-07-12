@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Common.Models
 {
-    public class SharePriceHistory
+    public class StockPriceHistory
     {
         public string Id { get; set; }
         public List<PriceHistory> History { get; set; }
 
-        public SharePriceHistory()
+        public StockPriceHistory()
         {
         }
     }

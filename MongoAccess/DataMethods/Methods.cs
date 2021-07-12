@@ -9,7 +9,7 @@ using System;
 
 namespace MongoAccess.DataMethods {
 	public static class Methods {
-		public static void AddInstrumment(Instrument ins, string connection) {
+		public static void AddUpdateInstrumment(Instrument ins, string connection) {
 			BsonDocument doc = ins.ToBsonDocument();
 			MongoClient dbClient = new MongoClient(connection);
 			var dbList = dbClient.ListDatabases().ToList();
@@ -18,14 +18,23 @@ namespace MongoAccess.DataMethods {
 			var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", ins.Id);
 			collection.FindOneAndDelete(deleteFilter);
 			collection.InsertOne(doc);
+
+			if (ins.MarketPrice > 0 && ins.MarketLastCheck > DateTime.Now.AddDays(-1))
+			{
+				Common.Models.StockPriceHistory ph = GetStockPriceHistory(ins.Id, connection);
+				PriceHistory his = new PriceHistory() { Price = ins.MarketPrice, RecordedOn = ins.MarketLastCheck };
+				ph.History.Add(his);
+				AddUpdatePriceHistory(ph, connection);
+			}
+
 		}
 
-		public static void AddPriceHistory(Common.Models.SharePriceHistory sph, string connection) {			
+		public static void AddUpdatePriceHistory(Common.Models.StockPriceHistory sph, string connection) {			
 			MongoClient dbClient = new MongoClient(connection);
-			var dbList = dbClient.ListDatabases().ToList();
+			
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<BsonDocument>("PriceHistory");
-			var deleteFilter = Builders<BsonDocument>.Filter.Eq("Id", sph.Id);
+			var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", sph.Id);
 			collection.FindOneAndDelete(deleteFilter);
 			BsonDocument doc = sph.ToBsonDocument();
 			collection.InsertOne(doc);
@@ -84,10 +93,10 @@ namespace MongoAccess.DataMethods {
 			List<Combo> comboList = new List<Combo>();
 			foreach (var ins in result)
             {
-				var sph = ListStockPriceHistory(ins.Id, connection);
+				var sph = GetStockPriceHistory(ins.Id, connection);
 				Combo cmb = new Combo()
 				{
-					instruent = ins,
+					instrument = ins,
 					sph = sph
 				};
 				comboList.Add(cmb);
@@ -97,13 +106,13 @@ namespace MongoAccess.DataMethods {
 			
 		}
 
-		public static Common.Models.SharePriceHistory ListStockPriceHistory(string stockId, string connection)
+		public static Common.Models.StockPriceHistory GetStockPriceHistory(string stockId, string connection)
 		{
-            Common.Models.SharePriceHistory result = new SharePriceHistory();
+            Common.Models.StockPriceHistory result = new StockPriceHistory();
             MongoClient dbClient = new MongoClient(connection);
 			var database = dbClient.GetDatabase("MarketData");
-			var collection = database.GetCollection<Common.Models.SharePriceHistory>("PriceHistory");
-			var builder = Builders<Common.Models.SharePriceHistory>.Filter;
+			var collection = database.GetCollection<Common.Models.StockPriceHistory>("PriceHistory");
+			var builder = Builders<Common.Models.StockPriceHistory>.Filter;
 			var filter = builder.Eq("Id", stockId);
 			result = collection.Find(filter).FirstOrDefault();
 			var test = collection.Find(filter).ToList();
