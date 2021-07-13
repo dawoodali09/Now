@@ -4,6 +4,7 @@ using Trader;
 using System.Diagnostics;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace NowConsole {
 	class Program {
@@ -12,7 +13,13 @@ namespace NowConsole {
 
         static void Main(string[] args)
         {
-            IConfiguration Configuration = GetConfiguration(args, Common.Enums.Machine.MAC);
+
+            Common.Enums.Machine currentMachine = Common.Enums.Machine.MAC;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                currentMachine = Common.Enums.Machine.WINDOWS;
+            }
+
+            IConfiguration Configuration = GetConfiguration(args, currentMachine);
             var emailSection = Configuration.GetSection("Email");
             var passwordSection = Configuration.GetSection("Password");
             var DatamodeSection = Configuration.GetSection("DataMode");
@@ -21,19 +28,19 @@ namespace NowConsole {
             var SQLConnection = Configuration.GetSection("SQLConnection");
 
             if (emailSection != null && passwordSection != null && DatamodeSection != null)
-            {
-               
+            {               
                 string email = emailSection.Value;
                 string password = passwordSection.Value;
                 string strDataMode = DatamodeSection.Value;
                 
                 Enum.TryParse(strDataMode, out Common.Enums.DataMode mode);
-                string connectionStr = mode == Common.Enums.DataMode.MONGO ? MongoConnection.Value : SQLConnection.Value;
+                string connectionStr = mode == Common.Enums.DataMode.MONGO ? MongoConnection.Value : SQLConnection.Value;                
                 Trader.Trader trader = new Trader.Trader(mode, connectionStr);
+                //trader.GetYahooData();
                 //trader.GetNZXShares();
                 //trader.StoreCategories(); // call this method only once in a blue moon
-                trader.SharesiesLogin(new Credentials() { email = email, password = password });               
-                trader.FeedSharesiesInstrumentData(trader.session);
+                //trader.SharesiesLogin(new Credentials() { email = email, password = password });               
+                //trader.FeedSharesiesInstrumentData(trader.session);
                 //trader.FeedPriceHistory(trader.session);
 
             }
