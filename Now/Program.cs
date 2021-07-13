@@ -36,6 +36,7 @@ namespace NowConsole {
                 Enum.TryParse(strDataMode, out Common.Enums.DataMode mode);
                 string connectionStr = mode == Common.Enums.DataMode.MONGO ? MongoConnection.Value : SQLConnection.Value;                
                 Trader.Trader trader = new Trader.Trader(mode, connectionStr);
+                trader.SuggestBuyNow("NZX", 5.00M);
                 //trader.GetYahooData();
                 //trader.GetNZXShares();
                 //trader.StoreCategories(); // call this method only once in a blue moon

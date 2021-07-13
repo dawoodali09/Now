@@ -8,10 +8,11 @@ namespace SQLDataAccess.Models
 {
     public partial class NowDBContext : DbContext
     {
-		public NowDBContext() {
-		}
+        public NowDBContext()
+        {
+        }
 
-		public NowDBContext(DbContextOptions<NowDBContext> options)
+        public NowDBContext(DbContextOptions<NowDBContext> options)
             : base(options)
         {
         }
@@ -23,6 +24,7 @@ namespace SQLDataAccess.Models
         public virtual DbSet<InstrumentCategory> InstrumentCategories { get; set; }
         public virtual DbSet<Market> Markets { get; set; }
         public virtual DbSet<PriceHistory> PriceHistories { get; set; }
+        public virtual DbSet<Rule> Rules { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -226,6 +228,23 @@ namespace SQLDataAccess.Models
                     .HasForeignKey(d => d.InstrumentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__PriceHist__Instr__5EBF139D");
+            });
+
+            modelBuilder.Entity<Rule>(entity =>
+            {
+                entity.Property(e => e.Description).HasMaxLength(800);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Uuid)
+                    .HasColumnName("UUID")
+                    .HasDefaultValueSql("(newid())");
             });
 
             OnModelCreatingPartial(modelBuilder);

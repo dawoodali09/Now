@@ -30,8 +30,7 @@ namespace MongoAccess.DataMethods {
 		}
 
 		public static void AddUpdatePriceHistory(Common.Models.StockPriceHistory sph, string connection) {			
-			MongoClient dbClient = new MongoClient(connection);
-			
+			MongoClient dbClient = new MongoClient(connection);			
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<BsonDocument>("PriceHistory");
 			var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", sph.Id);
@@ -65,8 +64,6 @@ namespace MongoAccess.DataMethods {
 				collection2.InsertOne(doc);
 			}
 		}
-
-
 
 		public static List<Instrument> ListInstruments(string connection) {
 			List<Instrument> result = new List<Instrument>();			
@@ -134,6 +131,42 @@ namespace MongoAccess.DataMethods {
 		public static IMongoCollection<TDocument> GetCollection<TDocument>(string collection, string con)
 		{
 			return GetDatabase(con).GetCollection<TDocument>(collection);
+		}
+
+		public static void PoppulateRules(string connection){
+			foreach (Common.Enums.Rules rule in Enum.GetValues(typeof(Common.Enums.Rules))) {
+				MongoClient dbClient = new MongoClient(connection);
+				var database = dbClient.GetDatabase("MarketData");
+				var collection = database.GetCollection<BsonDocument>("Rules");
+				
+				Rule erule = GetPresetRule(rule.ToString()); 
+
+				//var deleteFilter = Builders<rule>.Filter.Eq("_id", sph.Id);
+				//collection.FindOneAndDelete(deleteFilter);
+				//BsonDocument doc = sph.ToBsonDocument();
+				//collection.InsertOne(doc);
+
+				//NowDBContext con = new NowDBContext(connection);
+				//string RuleName = rule.ToString();
+				//if (!con.Rules.Where(s => s.Name == RuleName).Any()) {
+				//	SQLDataAccess.Models.Rule dbRule = GetPresetRule(RuleName);
+				//	con.Rules.Add(dbRule);
+				//	con.SaveChanges();
+				//}
+			}
+
+			static Rule GetPresetRule(string name) {
+				Rule rule = new Rule();
+				if (name == "PERatio")
+					new Common.Models.Rule() {
+						Name = "PERatio",
+						Description = "if PE Ratio is 0 or less then zero then avoid it, higher PE ratio is good though",
+						SupportPoint = 2,
+						Type = "Buying",
+						UUID = Guid.NewGuid()
+					};
+				return rule;
+			}
 		}
 	}
 }

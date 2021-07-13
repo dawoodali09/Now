@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\SQLDataAccess.csproj" />
+    <ProjectReference Include="..\MongoAccess\MongoAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,5 +16,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ML" Version="1.5.5" />
     <PackageReference Include="Microsoft.ML.DataView" Version="1.5.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 </Project>

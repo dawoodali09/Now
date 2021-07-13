@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Analyst\Analyst.csproj" />
     <ProjectReference Include="..\DataAccess\SQLDataAccess.csproj" />
     <ProjectReference Include="..\Utility\Utility.csproj" />
     <ProjectReference Include="..\MongoAccess\MongoAccess.csproj" />

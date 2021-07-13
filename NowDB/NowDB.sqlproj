@@ -65,6 +65,7 @@
     <Build Include="ClosingDays.sql" />
     <Build Include="Categories.sql" />
     <Build Include="InstrumentCategories.sql" />
+    <Build Include="Rules.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NowDB.publish.xml" />

@@ -302,5 +302,30 @@ namespace SQLDataAccess.DataMethods {
 			con.Dispose();
 			return OpenMarkets;
 		}
+
+		public static void PoppulateRules(string connection) {
+			foreach (Common.Enums.Rules rule in Enum.GetValues(typeof(Common.Enums.Rules))){
+				NowDBContext con = new NowDBContext(connection);
+				string RuleName = rule.ToString();
+				if(!con.Rules.Where(s=> s.Name == RuleName).Any()){
+					SQLDataAccess.Models.Rule dbRule = GetPresetRule(RuleName);
+					con.Rules.Add(dbRule);
+					con.SaveChanges();
+				}
+			}
+		}
+
+		private static SQLDataAccess.Models.Rule GetPresetRule(string name){
+			SQLDataAccess.Models.Rule rule = new SQLDataAccess.Models.Rule();
+			if(name == "PERatio")
+			new Models.Rule() {
+				Name = "PERatio",
+				Description = "if PE Ratio is 0 or less then zero then avoid it, higher PE ratio is good though",
+				SupportPoint = 2,
+				Type = "Buying",
+				Uuid = Guid.NewGuid(),
+			};
+			return rule;
+		}
 	}
 }
