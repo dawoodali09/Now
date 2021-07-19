@@ -98,7 +98,8 @@ namespace Trader {
 		}
 
 		public List<Recommendation> SuggestBuyNow(string exchange, decimal budgetPerShare) {
-			return analyst.BuyNow(exchange, budgetPerShare, DataMode, ConnectionString);
+			
+			return Analyst.Analyst.GetInstance().BuyNow(exchange, budgetPerShare, DataMode, ConnectionString);
 		}
 
 		#endregion
