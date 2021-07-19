@@ -109,7 +109,7 @@ namespace Trader {
 			if(DataMode == DataMode.SQL){
 				SQLDataAccess.DataMethods.Methods.PoppulateRules(this.ConnectionString);
 			}else if (DataMode == DataMode.MONGO){
-
+				MongoAccess.DataMethods.Methods.PoppulateRules(this.ConnectionString);
 			}
 		}
 

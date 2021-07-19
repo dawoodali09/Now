@@ -316,16 +316,58 @@ namespace SQLDataAccess.DataMethods {
 		}
 
 		private static SQLDataAccess.Models.Rule GetPresetRule(string name){
+			SQLDataAccess.Models.Rule resultRule = new SQLDataAccess.Models.Rule();
+
 			SQLDataAccess.Models.Rule rule = new SQLDataAccess.Models.Rule();
 			if(name == "PERatio")
-			new Models.Rule() {
-				Name = "PERatio",
+				resultRule = new Models.Rule() {
+				Name = name,
 				Description = "if PE Ratio is 0 or less then zero then avoid it, higher PE ratio is good though",
 				SupportPoint = 2,
 				Type = "Buying",
 				Uuid = Guid.NewGuid(),
 			};
-			return rule;
+			else if (name == "FiveYearCheck")
+				resultRule = new Models.Rule() {
+					Name = name,
+					Description = "Current market price is less then five year max, greater then or eq 5 year low, percentage is is positive ",
+					SupportPoint = 1,
+					Type = "Buying",
+					Uuid = Guid.NewGuid(),
+				};
+			else if (name == "OneYearCheck")
+				resultRule = new Models.Rule() {
+					Name = name,
+					Description = "Current market price is less then One year max, greater then or eq OneYearCheck year low, percentage is is positive ",
+					SupportPoint = 1,
+					Type = "Buying",
+					Uuid = Guid.NewGuid(),
+				};
+			else if (name == "SixMonthCheck")
+				resultRule = new Models.Rule() {
+					Name = name,
+					Description = "Current market price is less then Six month max, greater then or eq Six month low, percentage is is positive ",
+					SupportPoint = 2,
+					Type = "Buying",
+					Uuid = Guid.NewGuid(),
+				};
+			else if (name == "ThreeMonthCheck")
+				resultRule = new Models.Rule() {
+					Name = name,
+					Description = "Current market price is less then Three month max, greater then or eq Three month low, percentage is is positive ",
+					SupportPoint = 2,
+					Type = "Buying",
+					Uuid = Guid.NewGuid(),
+				};
+			else if (name == "OneWeekCheck")
+				resultRule = new Models.Rule() {
+					Name = name,
+					Description = "Current market price is less then One week max, greater then or eq One week low, percentage is is positive ",
+					SupportPoint = 3,
+					Type = "Buying",
+					Uuid = Guid.NewGuid(),
+				};
+			return resultRule;
 		}
 	}
 }

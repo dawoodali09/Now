@@ -19,8 +19,7 @@ namespace MongoAccess.DataMethods {
 			collection.FindOneAndDelete(deleteFilter);
 			collection.InsertOne(doc);
 
-			if (ins.MarketPrice > 0 && ins.MarketLastCheck > DateTime.Now.AddDays(-1))
-			{
+			if (ins.MarketPrice > 0 && ins.MarketLastCheck > DateTime.Now.AddDays(-1)) {
 				Common.Models.StockPriceHistory ph = GetStockPriceHistory(ins.Id, connection);
 				PriceHistory his = new PriceHistory() { Price = ins.MarketPrice, RecordedOn = ins.MarketLastCheck };
 				ph.History.Add(his);
@@ -29,8 +28,8 @@ namespace MongoAccess.DataMethods {
 
 		}
 
-		public static void AddUpdatePriceHistory(Common.Models.StockPriceHistory sph, string connection) {			
-			MongoClient dbClient = new MongoClient(connection);			
+		public static void AddUpdatePriceHistory(Common.Models.StockPriceHistory sph, string connection) {
+			MongoClient dbClient = new MongoClient(connection);
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<BsonDocument>("PriceHistory");
 			var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", sph.Id);
@@ -66,20 +65,19 @@ namespace MongoAccess.DataMethods {
 		}
 
 		public static List<Instrument> ListInstruments(string connection) {
-			List<Instrument> result = new List<Instrument>();			
-			MongoClient dbClient = new MongoClient(connection);			
+			List<Instrument> result = new List<Instrument>();
+			MongoClient dbClient = new MongoClient(connection);
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<Instrument>("Instruments");
 			var queryable = collection.AsQueryable();
-			foreach (var ins in queryable.ToList()){
+			foreach (var ins in queryable.ToList()) {
 				result.Add(ins);
 			}
 			return result;
 		}
 
-		public static List<Combo> ListInstruments(string market, string connection)
-		{
-			List<Instrument> result = new List<Instrument>();			
+		public static List<Combo> ListInstruments(string market, string connection) {
+			List<Instrument> result = new List<Instrument>();
 			MongoClient dbClient = new MongoClient(connection);
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<Instrument>("Instruments");
@@ -88,11 +86,9 @@ namespace MongoAccess.DataMethods {
 			result = collection.Find(filter).ToList();
 
 			List<Combo> comboList = new List<Combo>();
-			foreach (var ins in result)
-            {
+			foreach (var ins in result) {
 				var sph = GetStockPriceHistory(ins.Id, connection);
-				Combo cmb = new Combo()
-				{
+				Combo cmb = new Combo() {
 					instrument = ins,
 					sph = sph
 				};
@@ -100,73 +96,107 @@ namespace MongoAccess.DataMethods {
 
 			}
 			return comboList;
-			
+
 		}
 
-		public static Common.Models.StockPriceHistory GetStockPriceHistory(string stockId, string connection)
-		{
-            Common.Models.StockPriceHistory result = new StockPriceHistory();
-            MongoClient dbClient = new MongoClient(connection);
+		public static Common.Models.StockPriceHistory GetStockPriceHistory(string stockId, string connection) {
+			Common.Models.StockPriceHistory result = new StockPriceHistory();
+			MongoClient dbClient = new MongoClient(connection);
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<Common.Models.StockPriceHistory>("PriceHistory");
 			var builder = Builders<Common.Models.StockPriceHistory>.Filter;
 			var filter = builder.Eq("Id", stockId);
 			result = collection.Find(filter).FirstOrDefault();
 			var test = collection.Find(filter).ToList();
-			
+
 			return result;
 		}
 
-		private static IMongoDatabase GetDatabase(string connection)
-		{
+		private static IMongoDatabase GetDatabase(string connection) {
 			MongoClient mongoClient = new MongoClient(connection);
 			return mongoClient.GetDatabase("MarketData");
-}
+		}
 
-		public static IMongoCollection<BsonDocument> GetCollection(string collection, string connection)
-		{
+		public static IMongoCollection<BsonDocument> GetCollection(string collection, string connection) {
 			return GetDatabase(connection).GetCollection<BsonDocument>(collection);
 		}
 
-		public static IMongoCollection<TDocument> GetCollection<TDocument>(string collection, string con)
-		{
+		public static IMongoCollection<TDocument> GetCollection<TDocument>(string collection, string con) {
 			return GetDatabase(con).GetCollection<TDocument>(collection);
 		}
 
-		public static void PoppulateRules(string connection){
+		public static void PoppulateRules(string connection) {
 			foreach (Common.Enums.Rules rule in Enum.GetValues(typeof(Common.Enums.Rules))) {
 				MongoClient dbClient = new MongoClient(connection);
 				var database = dbClient.GetDatabase("MarketData");
 				var collection = database.GetCollection<BsonDocument>("Rules");
-				
-				Rule erule = GetPresetRule(rule.ToString()); 
-
-				//var deleteFilter = Builders<rule>.Filter.Eq("_id", sph.Id);
-				//collection.FindOneAndDelete(deleteFilter);
-				//BsonDocument doc = sph.ToBsonDocument();
-				//collection.InsertOne(doc);
-
-				//NowDBContext con = new NowDBContext(connection);
-				//string RuleName = rule.ToString();
-				//if (!con.Rules.Where(s => s.Name == RuleName).Any()) {
-				//	SQLDataAccess.Models.Rule dbRule = GetPresetRule(RuleName);
-				//	con.Rules.Add(dbRule);
-				//	con.SaveChanges();
-				//}
+				Rule erule = GetPresetRule(rule.ToString());
+				var deleteFilter = Builders<BsonDocument>.Filter.Eq("id", erule.Id);
+				collection.FindOneAndDelete(deleteFilter);
+				BsonDocument doc = erule.ToBsonDocument();
+				collection.InsertOne(doc);
 			}
+		}
 
-			static Rule GetPresetRule(string name) {
-				Rule rule = new Rule();
-				if (name == "PERatio")
-					new Common.Models.Rule() {
-						Name = "PERatio",
-						Description = "if PE Ratio is 0 or less then zero then avoid it, higher PE ratio is good though",
-						SupportPoint = 2,
-						Type = "Buying",
-						UUID = Guid.NewGuid()
-					};
-				return rule;
-			}
+		static Rule GetPresetRule(string name) {
+			Rule resultRule = new Rule();
+			if (name == "PERatio")
+				resultRule = new Rule() {
+					Name = name,
+					Description = "if PE Ratio is 0 or less then zero then avoid it, higher PE ratio is good though",
+					SupportPoint = 2,
+					Type = "Buying",
+					UUID = Guid.NewGuid(),
+					Id = 1
+				};
+			else if (name == "FiveYearCheck")
+				resultRule = new Rule() {
+					Name = name,
+					Description = "Current market price is less then five year max, greater then or eq 5 year low, percentage is is positive ",
+					SupportPoint = 1,
+					Type = "Buying",
+					UUID = Guid.NewGuid(),
+					Id = 2
+				};
+			else if (name == "OneYearCheck")
+				resultRule = new Rule() {
+					Name = name,
+					Description = "Current market price is less then One year max, greater then or eq OneYearCheck year low, percentage is is positive ",
+					SupportPoint = 1,
+					Type = "Buying",
+					UUID = Guid.NewGuid(),
+					Id = 3
+				};
+			else if (name == "SixMonthCheck")
+				resultRule = new Rule() {
+					Name = name,
+					Description = "Current market price is less then Six month max, greater then or eq Six month low, percentage is is positive ",
+					SupportPoint = 2,
+					Type = "Buying",
+					UUID = Guid.NewGuid(),
+					Id = 4
+				};
+			else if (name == "ThreeMonthCheck")
+				resultRule = new Rule() {
+					Name = name,
+					Description = "Current market price is less then Three month max, greater then or eq Three month low, percentage is is positive ",
+					SupportPoint = 2,
+					Type = "Buying",
+					UUID = Guid.NewGuid(),
+					Id = 5
+				};
+			else if (name == "OneWeekCheck")
+				resultRule = new Rule() {
+					Name = name,
+					Description = "Current market price is less then One week max, greater then or eq One week low, percentage is is positive ",
+					SupportPoint = 3,
+					Type = "Buying",
+					UUID = Guid.NewGuid(),
+					Id = 6
+				};
+
+			return resultRule;
 		}
 	}
 }
+  
