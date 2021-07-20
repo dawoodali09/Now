@@ -75,13 +75,7 @@ namespace MongoAccess.DataMethods {
 			}
 			return result;
 		}
-
-<<<<<<< Updated upstream
-		public static List<Combo> ListInstruments(string market, string connection) {
-			List<Instrument> result = new List<Instrument>();
-=======
-		public static List<Instrument> ListInstrumentsByMarket(string market,decimal budgetPrice, string connection)
-		{
+		public static List<Instrument> ListInstrumentsByMarket(string market, decimal budgetPrice, string connection) {
 			List<Instrument> result = new List<Instrument>();
 			MongoClient dbClient = new MongoClient(connection);
 			var database = dbClient.GetDatabase("MarketData");
@@ -97,10 +91,9 @@ namespace MongoAccess.DataMethods {
 			return result;
 		}
 
-		public static List<Combo> ListInstruments(string market, string connection)
-		{
-			List<Instrument> result = new List<Instrument>();			
->>>>>>> Stashed changes
+
+		public static List<Combo> ListInstruments(string market, string connection) {
+			List<Instrument> result = new List<Instrument>();
 			MongoClient dbClient = new MongoClient(connection);
 			var database = dbClient.GetDatabase("MarketData");
 			var collection = database.GetCollection<Instrument>("Instruments");
@@ -129,13 +122,9 @@ namespace MongoAccess.DataMethods {
 			var collection = database.GetCollection<Common.Models.StockPriceHistory>("PriceHistory");
 			var builder = Builders<Common.Models.StockPriceHistory>.Filter;
 			var filter = builder.Eq("Id", stockId);
-<<<<<<< Updated upstream
 			result = collection.Find(filter).FirstOrDefault();
 			var test = collection.Find(filter).ToList();
 
-=======
-			result = collection.Find(filter).FirstOrDefault();			
->>>>>>> Stashed changes
 			return result;
 		}
 
