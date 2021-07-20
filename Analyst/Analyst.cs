@@ -38,7 +38,7 @@ namespace Analyst
             }
             else if(dataMode == DataMode.SQL)
             {
-                //todo....
+                filteredInstruments = SQLDataAccess.DataMethods.Methods.ListInstrumentsByMarket(exchange, budgetPerShare, connection);
             }
 
             // filter shares with budget price and non zero price shares
@@ -60,32 +60,29 @@ namespace Analyst
             return result;
         }
 
-        List<BigData> GetBigData(List<Instrument> instruments, DataMode dataMode, string connection)
-        {
+        List<BigData> GetBigData(List<Instrument> instruments, DataMode dataMode, string connection) {
             List<BigData> result = new List<BigData>();
-            if (dataMode == DataMode.MONGO) {
-                foreach (var ins in instruments)
-                {
-                    BigData bd = new BigData()
-                    {
-                        Instrument = ins,
-                        PriceHistory = MongoAccess.DataMethods.Methods.GetStockPriceHistory(ins.Id, connection).History.ToList()
-                    };
-                    // fillin the missing price history
-                    // populate attributes
-                    result.Add(bd);
-                }
-            }
-            else
-            {
 
-                // todo
+            foreach (var ins in instruments) {
+
+                List<PriceHistory> ph = new List<PriceHistory>();
+                if (dataMode == DataMode.SQL) {
+                    ph = SQLDataAccess.DataMethods.Methods.GetStockPriceHistory(int.Parse(ins.Id), connection).History.ToList();
+                } else if (dataMode == DataMode.MONGO){
+                    ph = MongoAccess.DataMethods.Methods.GetStockPriceHistory(ins.Id, connection).History.ToList();
+                }
+
+                BigData bd = new BigData() { Instrument = ins, PriceHistory = ph };
+
+                // fillin the missing price history
+                // populate attributes
+                result.Add(bd);
             }
 
             return result;
-
         }
-        
+
+       
         // sell now input shares from portfolio , fee , age) set profit and loss list of shares to sell with rule id
         //TODO....
     }

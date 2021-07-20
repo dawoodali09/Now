@@ -5,6 +5,7 @@ using SQLDataAccess.Models;
 using System;
 using System.Linq;
 using PriceHistory = SQLDataAccess.Models.PriceHistory;
+using Microsoft.EntityFrameworkCore;
 
 namespace SQLDataAccess.DataMethods {
 	public static class Methods {
@@ -368,6 +369,29 @@ namespace SQLDataAccess.DataMethods {
 					Uuid = Guid.NewGuid(),
 				};
 			return resultRule;
+		}
+
+		public static List<Common.Models.Instrument> ListInstrumentsByMarket(string market, decimal budgetPrice, string connection) {
+			List<Common.Models.Instrument> result = new List<Common.Models.Instrument>();
+			NowDBContext con = new NowDBContext(connection);
+			List<SQLDataAccess.Models.Instrument> dbInstruments = con.Instruments.Include(m=> m.Market).Include(c=> c.InstrumentCategories).ThenInclude(a=> a.Category).Where(s => s.Market.Code == market && s.MarketPrice <= budgetPrice && s.MarketPrice > 0).ToList();
+			foreach(var ins in dbInstruments){
+				result.Add(ins.ToCommonInstrument());
+			}
+			con.Dispose();			
+			return result;
+		}
+
+		public static Common.Models.StockPriceHistory GetStockPriceHistory(int stockId, string connection) {
+			NowDBContext con = new NowDBContext(connection);
+			Common.Models.StockPriceHistory result = new StockPriceHistory();
+			var dbPH = con.PriceHistories.Where(s => s.InstrumentId == stockId).OrderBy(s => s.RecordedOn);
+			 
+			result.History = new List<Common.Models.PriceHistory>();
+			foreach(var ph in dbPH.ToList()){
+				result.History.Add(new Common.Models.PriceHistory() { Price = ph.Price, RecordedOn = ph.RecordedOn });
+			}
+ 			return result;
 		}
 	}
 }
