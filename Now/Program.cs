@@ -37,7 +37,7 @@ namespace NowConsole {
                 string connectionStr = mode == Common.Enums.DataMode.MONGO ? MongoConnection.Value : SQLConnection.Value;                
                 Trader.Trader trader = new Trader.Trader(mode, connectionStr);
                 //trader.PopulateRules();
-                trader.SuggestBuyNow("NASDAQ", 5.00M);
+                trader.SuggestBuyNow("NZX", 5.00M);
                 //trader.GetYahooData();
                 //trader.GetNZXShares();
                 //trader.StoreCategories(); // call this method only once in a blue moon

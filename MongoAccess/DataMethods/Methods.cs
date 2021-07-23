@@ -147,7 +147,7 @@ namespace MongoAccess.DataMethods {
 				var database = dbClient.GetDatabase("MarketData");
 				var collection = database.GetCollection<BsonDocument>("Rules");
 				Rule erule = GetPresetRule(rule.ToString());
-				var deleteFilter = Builders<BsonDocument>.Filter.Eq("id", erule.Id);
+				var deleteFilter = Builders<BsonDocument>.Filter.Eq("_id", erule.Id);
 				collection.FindOneAndDelete(deleteFilter);
 				BsonDocument doc = erule.ToBsonDocument();
 				collection.InsertOne(doc);

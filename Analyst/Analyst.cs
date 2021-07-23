@@ -72,18 +72,51 @@ namespace Analyst
                     ph = MongoAccess.DataMethods.Methods.GetStockPriceHistory(ins.Id, connection).History.ToList();
                 }
 
-                BigData bd = new BigData() { Instrument = ins, PriceHistory = ph };
+                BigData bd = new BigData() { Instrument = ins, PriceHistory = RefinePriceHistory(ph) };
 
-                // fillin the missing price history
-                // populate attributes
+                // populate attributes                  
                 result.Add(bd);
             }
 
             return result;
         }
+        
+        // removing redundant data and filling in the gap 
+        public List<Common.Models.PriceHistory> RefinePriceHistory(List<PriceHistory> hist) {
+            List<Common.Models.PriceHistory> priceHistories = new List<Common.Models.PriceHistory>();
+            int index = 0;
+            foreach(var ph in hist.OrderBy(s=> s.RecordedOn).GroupBy(s=> s.RecordedOn.Date).Select(f=> f.First()).ToList()) {
+                if(!priceHistories.Where(s=> s.RecordedOn.Date == ph.RecordedOn.Date).Any()){
+                    // first entry ad it as it is or // successive day
+                    if (index == 0 || (priceHistories[index - 1].RecordedOn.Date == ph.RecordedOn.Date.AddDays(-1))){
+                        priceHistories.Add(ph);
+                        index++;
+                    }                    
+                    else
+                    {
+                        // fill in the avg 
+                        decimal avg = (priceHistories[index - 1].Price + ph.Price) / 2;
+                        decimal toAddatEnd = ph.Price;
+                        DateTime dateatEnd = ph.RecordedOn.Date;
 
-       
-        // sell now input shares from portfolio , fee , age) set profit and loss list of shares to sell with rule id
-        //TODO....
+                        for (int i=0; i <= (ph.RecordedOn.Date - priceHistories[index-1].RecordedOn.Date).TotalDays; i++)
+                        {
+                            DateTime dateToAssign = priceHistories[index - 1].RecordedOn.Date.AddDays(1);
+                            if (dateToAssign.Date != dateatEnd.Date)
+                            {
+                                priceHistories.Add(new PriceHistory() { Price = avg, RecordedOn = dateToAssign });
+                                index++;
+                            }
+                        }
+
+                        priceHistories.Add(new PriceHistory() { Price = toAddatEnd, RecordedOn = dateatEnd });
+                        index++;
+                    }
+                }
+
+            }
+
+            return priceHistories;
+         }
     }
 }

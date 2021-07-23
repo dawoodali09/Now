@@ -11,7 +11,6 @@ namespace Analyst {
 
 		public Recommendation Evaluate(BigData bigData) {
 			Recommendation rec = new Recommendation();
-			
 			return rec;
 		}
 
