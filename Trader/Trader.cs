@@ -14,7 +14,7 @@ namespace Trader {
 	public class Trader : ITrade {
 
 		#region "Properties"
-		public Analyst.Analyst analyst;
+		public Analyst.Analyst analyst = Analyst.Analyst.GetInstance();
 		Common.Enums.DataMode DataMode;
 		public Session session;
 		public string ConnectionString { get; set; }
@@ -99,7 +99,9 @@ namespace Trader {
 
 		public List<Recommendation> SuggestBuyNow(string exchange, decimal budgetPerShare) {
 			
-			return Analyst.Analyst.GetInstance().BuyNow(exchange, budgetPerShare, DataMode, ConnectionString);
+			return this.analyst.BuyNow(exchange, budgetPerShare, DataMode, ConnectionString);
+
+			//Analyst.Analyst.GetInstance().BuyNow(exchange, budgetPerShare, DataMode, ConnectionString);
 		}
 
 		#endregion
