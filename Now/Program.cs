@@ -14,6 +14,9 @@ namespace NowConsole {
         static void Main(string[] args)
         {
 
+
+            DynamoDBAccess.DataMethods.Methods.test();
+
             Common.Enums.Machine currentMachine = Common.Enums.Machine.MAC;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
                 currentMachine = Common.Enums.Machine.WINDOWS;
@@ -37,12 +40,12 @@ namespace NowConsole {
                 string connectionStr = mode == Common.Enums.DataMode.MONGO ? MongoConnection.Value : SQLConnection.Value;                
                 Trader.Trader trader = new Trader.Trader(mode, connectionStr);
                 //trader.PopulateRules();
-                trader.SuggestBuyNow("NZX", 5.00M);
+                //trader.SuggestBuyNow("NZX", 5.00M);
                 //trader.GetYahooData();
                 //trader.GetNZXShares();
                 //trader.StoreCategories(); // call this method only once in a blue moon
-                //trader.SharesiesLogin(new Credentials() { email = email, password = password });               
-                //trader.FeedSharesiesInstrumentData(trader.session);
+                trader.SharesiesLogin(new Credentials() { email = email, password = password });               
+                trader.FeedSharesiesInstrumentData(trader.session);
                 //trader.FeedPriceHistory(trader.session);
 
             }
