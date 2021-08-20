@@ -179,7 +179,7 @@ namespace Trader {
 		public void GetYahooData() {
 			HttpClient _httpClient = new HttpClient();
 			//_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Session.credentials.auth_token);
-			int offset = 1, count = 100;
+			int offset = 1;
 			string requestUri = "https://nz.finance.yahoo.com/most-active?offset=" + offset.ToString() + "&count=100";
 			HttpResponseMessage httpResponse = _httpClient.GetAsync(requestUri).Result;
 			var res = httpResponse.Content.ReadAsStringAsync();
