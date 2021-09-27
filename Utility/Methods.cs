@@ -13,19 +13,24 @@ namespace Utility {
 			var request = (HttpWebRequest)WebRequest.Create(requestURI);
 			request.Host = "app.sharesies.com";
 			request.Headers["sec-ch-ua"] = " \"Not; A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\";";
-			request.Headers["x-version"] = "9593";
+			request.Headers["x-version"] = "11365";
 			request.Headers["DNT"] = "1";
 			request.Headers["x-api-version"] = "33";
 			request.Headers["sec-ch-ua-mobile"] = "?0";
 			request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36";
 			request.Headers["x-known-device-key"] = "fded2945-3566-4c96-9e66-1264373ea09b";
-			request.Headers["x-git-hash"] = "7ab4eb9847185e7b5518da901ed792b01de314ff";
+			request.Headers["x-git-hash"] = "6b2d7632ecff1a362b1b2f0fa63ade4ac3dc2f91";
+			request.Headers["sec-ch-ua-platform"] = "Windows";
+			request.Headers["Sec-Fetch-Dest"] = "empty";
 			request.Accept = "*/*";
 			request.Headers["Origin"] = "https://app.sharesies.com";
+
 			request.Headers["Sec-Fetch-Site"] = "same-origin";
 			request.Headers["Sec-Fetch-Mode"] = "cors";
 			request.Headers["Sec-Fetch-Dest"] = "empty";
-			request.Headers["Referer"] = "https://app.sharesies.com/login?_ga=2.153184378.310525915.1621999829-1590703744.1621999829";
+
+
+			request.Headers["Referer"] = "https://app.sharesies.com/login?next=%2Fportfolio";
 			request.Headers["Accept-Encoding"] = "gzip, deflate, br";
 			request.Headers["Accept-Language"] = "en-GB,en-US;q=0.9,en;q=0.8";
 			var data = Encoding.ASCII.GetBytes(payLoad);
@@ -36,8 +41,20 @@ namespace Utility {
 			using (var stream = request.GetRequestStream()) {
 				stream.Write(data, 0, data.Length);
 			}
-			response = (HttpWebResponse)request.GetResponse();
-			return response;
+			try
+			{
+				response = (HttpWebResponse)request.GetResponse();
+				return response;
+			}
+			catch(WebException wex)
+            {
+				string msg = wex.Message;
+            }
+			catch(System.Exception ex)
+            {
+				string mm = ex.Message;
+            }
+			return null;
 		}
 
 		public static HttpWebResponse GetData(string requestURI, string payLoad, NameValueCollection headers) {
