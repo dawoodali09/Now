@@ -8,10 +8,6 @@ namespace DynamoDBAccess.DataMethods {
 	public class Methods {
 		public IDynamoDBContext dynamoDBContext { get; set; }
 
-		public static void test(){
-			 
-
-
-		}
+		
 	}
 }
